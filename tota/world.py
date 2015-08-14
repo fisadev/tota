@@ -1,6 +1,7 @@
 import random
 
 from tota.things import Tree, Tower, Ancient
+from tota.utils import inside_map
 from tota import settings
 
 
@@ -15,6 +16,10 @@ class World:
 
     def spawn(self, thing, position):
         """Add a thing to the world."""
+        if not inside_map(position):
+            message = "Can't spawn things outside the map {}".format(position)
+            raise Exception(message)
+
         other = self.things.get(position)
         if other is None:
             self.things[position] = thing
