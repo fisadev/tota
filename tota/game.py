@@ -124,6 +124,8 @@ class Game:
                 print('')
                 print(description)
 
+                return description
+
     def draw(self):
         """Draw the world."""
         screen = ''
