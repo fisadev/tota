@@ -16,7 +16,7 @@ class World:
 
     def spawn(self, thing, position):
         """Add a thing to the world."""
-        if not inside_map(position):
+        if not inside_map(position, self.size):
             message = "Can't spawn things outside the map {}".format(position)
             raise Exception(message)
 
