@@ -1,4 +1,3 @@
-from copy import deepcopy
 import random
 
 from tota.things import Tree, Tower, Ancient
