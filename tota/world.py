@@ -55,7 +55,7 @@ class World:
                         message = 'is idle'
                     else:
                         action, target_position = act_result
-                        if action not in self.possible_actions:
+                        if action not in thing.possible_actions:
                             message = 'returned unknown action {}'.format(action)
                         else:
                             actions.append((thing, action, target_position))
