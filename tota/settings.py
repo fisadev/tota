@@ -47,5 +47,10 @@ TEAM_COLORS = {
     TEAM_RADIANT: 'blue',
     TEAM_DIRE: 'red',
     TEAM_NEUTRAL: 'green',
+}
 
+ENEMY_TEAMS = {
+    TEAM_RADIANT: TEAM_DIRE,
+    TEAM_DIRE: TEAM_RADIANT,
+    TEAM_NEUTRAL: None,
 }
