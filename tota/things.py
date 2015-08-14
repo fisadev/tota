@@ -1,5 +1,6 @@
 from tota import actions
 from tota import settings
+from tota.utils import distance, closest
 
 
 class Thing:
@@ -77,7 +78,14 @@ class Tower(Thing):
         }
 
     def act(self, things, t):
-        pass
+        enemy_team = settings.ENEMY_TEAMS[self.team]
+        enemies = [thing for thing in things.values()
+                   if thing.team == enemy_team]
+        closest_enemy = closest(self, enemies)
+        if distance(self, closest_enemy) <= settings.TOWER_ATTACK_DISTANCE:
+            return 'attack', closest_enemy.position
+        else:
+            return None
 
 
 class Hero(Thing):
