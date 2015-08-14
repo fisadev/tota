@@ -92,7 +92,7 @@ class World:
 
     def clean_deads(self):
         """Remove dead things from the world."""
-        for thing in self.things.values():
+        for thing in list(self.things.values()):
             if thing.life <= 0:
                 self.destroy(thing)
                 self.event(thing, 'died')
