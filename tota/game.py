@@ -51,10 +51,10 @@ class Game:
                         if isinstance(thing, Ancient) and thing.team == team]
             if not ancients:
                 message = "Can't find the ancient for the {} team".format(team)
-                raise ValueError(message)
+                raise Exception(message)
             elif len(ancients) > 1:
                 message = "Team {} has 2 ancients".format(team)
-                raise ValueError(message)
+                raise Exception(message)
             else:
                 return ancients[0]
 
@@ -84,7 +84,7 @@ class Game:
             self.world.spawn(thing, spawn_at)
         else:
             message = "Can't spawn {} near its ancient".format(thing.name)
-            raise ValueError(message)
+            raise Exception(message)
 
     def position_draw(self, position):
         """Get the string to draw for a given position of the world."""

@@ -11,7 +11,7 @@ class Thing:
         if team not in (settings.TEAM_DIRE,
                         settings.TEAM_RADIANT,
                         settings.TEAM_NEUTRAL):
-            raise ValueError('Invalid team name: {}'.format(team))
+            raise Exception('Invalid team name: {}'.format(team))
 
         self.name = name
         self.life = life
