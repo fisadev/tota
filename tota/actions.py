@@ -29,7 +29,7 @@ def check_cooldown(last_uses_key, cooldown):
 def check_distance(action_distance):
     def decorator(f):
         def action_with_distance_check(thing, world, target_position):
-            if distance(thing.position, target_position) > action_distance:
+            if distance(thing, target_position) > action_distance:
                 event = 'too far away'
             else:
                 event = f(thing, world, target_position)
@@ -146,7 +146,7 @@ def creep_attack(thing, world, target_position):
 def heal(thing, world, target_position):
     event_bits = []
     for position, target in world.things.items():
-        if distance(target_position, target.position) <= settings.HEAL_RADIUS:
+        if distance(target_position, target) <= settings.HEAL_RADIUS:
             # heal avoiding health overflow
             heal = calculate_damage(thing,
                                     settings.HEAL_BASE_HEALING,
@@ -165,7 +165,7 @@ def heal(thing, world, target_position):
 def fireball(thing, world, target_position):
     event_bits = []
     for position, target in world.things.items():
-        if distance(target_position, target.position) <= settings.FIREBALL_RADIUS:
+        if distance(target_position, target) <= settings.FIREBALL_RADIUS:
             damage = calculate_damage(thing,
                                       settings.FIREBALL_BASE_DAMAGE,
                                       settings.FIREBALL_LEVEL_MULTIPLIER)
