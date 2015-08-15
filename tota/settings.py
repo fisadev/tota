@@ -43,6 +43,10 @@ TEAM_RADIANT = 'radiant'
 TEAM_DIRE = 'dire'
 TEAM_NEUTRAL = 'neutral'
 
+XP_DISTANCE = 10
+XP_CREEP_DEAD = 10
+XP_HERO_DEAD = 100
+
 TEAM_COLORS = {
     TEAM_RADIANT: 'blue',
     TEAM_DIRE: 'red',
