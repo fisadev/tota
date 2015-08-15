@@ -21,6 +21,7 @@ class Thing:
         self.position = position
         self.acts = acts
         self.disabled_until = 0
+        self.last_uses = {}
 
     @property
     def alive(self):

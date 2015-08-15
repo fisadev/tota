@@ -7,10 +7,8 @@ from tota import settings
 def check_cooldown(last_uses_key, cooldown):
     def decorator(f):
         def action_with_cooldown_check(thing, world, target_position):
-            last_uses = getattr(thing, 'last_uses', {})
-
-            if last_uses_key in last_uses:
-                ready = world.t - last_uses[last_uses_key] > cooldown
+            if last_uses_key in thing.last_uses:
+                ready = world.t - thing.last_uses[last_uses_key] > cooldown
             else:
                 ready = True
 
