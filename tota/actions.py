@@ -153,7 +153,7 @@ def heal(thing, world, target_position):
 
             event_bits.append('healed {} by {}'.format(target.name, heal))
 
-        world.effects[position] = 'yellow'
+        world.effects[position] = 'white'
 
     return ', '.join(event_bits)
 
@@ -193,5 +193,7 @@ def stun(thing, world, target_position):
     else:
         target.disabled_until = world.t + settings.STUN_DURATION
         event = 'stuned {}'.format(target.name)
+
+    world.effects[target_position] = 'magenta'
 
     return event

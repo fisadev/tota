@@ -88,15 +88,25 @@ class Game:
         """Get the string to draw for a given position of the world."""
         # decorations first, then things over them
         thing = self.world.things.get(position)
+        effect = self.world.effects.get(position)
 
         if thing is not None:
             if self.use_basic_icons:
                 icon = thing.ICON_BASIC
             else:
                 icon = thing.ICON
-            return colored(icon, settings.TEAM_COLORS[thing.team])
+
+            color = settings.TEAM_COLORS[thing.team]
         else:
-            return ' '
+            icon = ' '
+            color = None
+
+        if effect is not None:
+            on_color = 'on_' + effect
+        else:
+            on_color = None
+
+        return colored(icon + ' ', color, on_color)
 
     def play(self, frames_per_second=2.0):
         """Game main loop, ending in a game result with description."""
@@ -114,6 +124,8 @@ class Game:
             self.clean_deads()
 
             self.draw()
+
+            self.world.effects = {}
 
             if self.debug:
                 input()
@@ -158,7 +170,7 @@ class Game:
         screen = ''
 
         # print the world
-        screen += '\n'.join(u''.join(self.position_draw((x, y)) + ' '
+        screen += '\n'.join(u''.join(self.position_draw((x, y))
                                      for x in range(self.world.size[0]))
                             for y in range(self.world.size[1]))
 
