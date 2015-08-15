@@ -134,7 +134,7 @@ class Hero(Thing):
         }
 
     def act(self, things, t):
-        return self.act_function(things, t)
+        return self.act_function(self, things, t)
 
 
 class Ancient(Thing):
