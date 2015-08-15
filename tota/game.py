@@ -23,12 +23,14 @@ class Game:
        to stop, importing map data, drawing each update, etc.
     """
     def __init__(self, radiant_heroes, dire_heroes, map_file_path, world_size,
-                 debug=False, use_basic_icons=False):
+                 debug=False, use_basic_icons=False,
+                 use_compressed_view=False):
         self.radiant_heroes = radiant_heroes
         self.dire_heroes = dire_heroes
         self.map_file_path = map_file_path
         self.debug = debug
         self.use_basic_icons = use_basic_icons
+        self.use_compressed_view = use_compressed_view
 
         self.heroes = []
         self.ancients = {}
@@ -106,7 +108,12 @@ class Game:
         else:
             on_color = None
 
-        return colored(icon + ' ', color, on_color)
+        if self.use_compressed_view:
+            widener = ''
+        else:
+            widener = ' '
+
+        return colored(icon + widener, color, on_color)
 
     def play(self, frames_per_second=2.0):
         """Game main loop, ending in a game result with description."""

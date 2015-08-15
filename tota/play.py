@@ -3,7 +3,7 @@
 
 Usage:
     ./play.py --help
-    ./play.py DIRE_HEROES RADIANT_HEROES [-m MAP] [-s SIZE] [-d] [-b] [-f MAX_FRAMES]
+    ./play.py DIRE_HEROES RADIANT_HEROES [-m MAP] [-s SIZE] [-d] [-b] [-f MAX_FRAMES] [-c]
 
     DIRE_HEROES and RADIANT_HEROES must be comma separated lists
 
@@ -17,6 +17,8 @@ Options:
     -f MAX_FRAMES        Maximum frames per second [default: 2].
     -b                   Use basic icons if you have trouble with the
                          normal icons.
+    -c                   Use a compressed view if the default one is too wide
+                         for your terminal.
 """
 from docopt import docopt
 
@@ -34,6 +36,7 @@ def play():
     # parse arguments
     debug = arguments['-d']
     use_basic_icons = arguments['-b']
+    use_compressed_view = arguments['-c']
     max_frames = int(arguments['-f'])
 
     radiant_heroes = arguments['RADIANT_HEROES'].split(',')
@@ -53,7 +56,8 @@ def play():
              map_file_path=map_path,
              world_size=size,
              debug=debug,
-             use_basic_icons=use_basic_icons)
+             use_basic_icons=use_basic_icons,
+             use_compressed_view=use_compressed_view)
     g.play(max_frames)
 
 
