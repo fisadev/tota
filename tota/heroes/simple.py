@@ -32,10 +32,10 @@ def create():
                     # of finally just move to him
                     moves = sort_by_distance(closest_enemy,
                                              possible_moves(self, things))
-                    for move in moves:
-                        return 'move', move
-            else:
-                # no enemies, do nothing
-                return None
+                    if moves:
+                        return 'move', moves[0]
+
+        # can't do the things I want. Do nothing.
+        return None
 
     return simple_hero_logic
