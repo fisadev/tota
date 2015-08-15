@@ -20,7 +20,8 @@ def distance(a, b):
 
 
 def sort_by_distance(something, others):
-    by_distance = lambda other: (distance(something, other), random())
+    def by_distance(other):
+        return distance(something, other), random()
     return sorted(others, key=by_distance)
 
 
