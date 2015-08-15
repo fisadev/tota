@@ -3,7 +3,7 @@
 
 Usage:
     ./play.py --help
-    ./play.py DIRE_HEROES RADIANT_HEROES [-m MAP] [-s SIZE] [-d] [-b] [-f MAX_FRAMES] [-c]
+    ./play.py RADIANT_HEROES DIRE_HEROES [-m MAP] [-s SIZE] [-d] [-b] [-f MAX_FRAMES] [-c]
 
     DIRE_HEROES and RADIANT_HEROES must be comma separated lists
 
