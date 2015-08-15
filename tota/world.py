@@ -11,7 +11,7 @@ class World:
         self.size = size
         self.debug = debug
         self.things = {}
-        self.t = -1
+        self.t = 0
         self.events = []
 
     def spawn(self, thing, position):
