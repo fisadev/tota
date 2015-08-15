@@ -1,6 +1,6 @@
 from tota import actions
 from tota import settings
-from tota.utils import distance, closest
+from tota.utils import distance, closest, sort_by_distance, adjacent_positions
 
 
 class Thing:
@@ -59,7 +59,32 @@ class Creep(Thing):
         }
 
     def act(self, things, t):
-        pass
+        enemy_team = settings.ENEMY_TEAMS[self.team]
+        enemies = [thing for thing in things.values()
+                   if thing.team == enemy_team]
+        closest_enemy = closest(self, enemies)
+        closest_enemy_distance = distance(self, closest_enemy)
+
+        if closest_enemy_distance <= settings.CREEP_ATTACK_DISTANCE:
+            # enemy in range, attack!
+            return 'attack', closest_enemy.position
+        else:
+            if closest_enemy_distance > settings.CREEP_AGGRO_DISTANCE:
+                # enemy too far away, go to the ancient
+                enemy_ancient = [thing for thing in enemies
+                                 if isinstance(thing, Ancient)][0]
+                move_target = enemy_ancient
+            else:
+                # enemy in aggro distance, go to it!
+                move_target = closest_enemy
+
+            adjacents = sort_by_distance(move_target,
+                                         adjacent_positions(self))
+            for adjacent in adjacents:
+                if adjacent not in things:
+                    return 'move', adjacent
+
+            return None
 
 
 class Tower(Thing):
