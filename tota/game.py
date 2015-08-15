@@ -132,7 +132,7 @@ class Game:
         for thing in list(self.world.things.values()):
             if not thing.alive:
                 for hero in self.heroes:
-                    if hero.team != thing.team and distance(hero, thing) < settings.XP_DISTANCE:
+                    if hero.alive and hero.team != thing.team and distance(hero, thing) < settings.XP_DISTANCE:
                         if isinstance(thing, Creep):
                             hero.xp += settings.XP_CREEP_DEAD
                         elif isinstance(thing, Hero):
