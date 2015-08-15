@@ -20,8 +20,12 @@ class Thing:
         self.team = team
         self.position = position
         self.acts = acts
+
         self.disabled_until = 0
+
         self.last_uses = {}
+        self.possible_actions = {}
+        self.possible_actions_cooldowns = {}
 
     @property
     def alive(self):
@@ -37,6 +41,11 @@ class Thing:
 
     def act(self, things, t):
         return None
+
+    def can(self, action, t):
+        cooldown = self.possible_actions_cooldowns[action]
+        last_use = self.last_uses.get(action, -100)
+        return last_use + cooldown <= t
 
     def __str__(self):
         return self.name
@@ -69,6 +78,10 @@ class Creep(Thing):
         self.possible_actions = {
             'attack': actions.creep_attack,
             'move': actions.move,
+        }
+        self.possible_actions_cooldowns = {
+            'attack': 0,
+            'move': 0,
         }
 
     def act(self, things, t):
@@ -113,6 +126,9 @@ class Tower(Thing):
         self.possible_actions = {
             'attack': actions.tower_attack,
         }
+        self.possible_actions_cooldowns = {
+            'attack': 0,
+        }
 
     def act(self, things, t):
         enemy_team = settings.ENEMY_TEAMS[self.team]
@@ -144,6 +160,13 @@ class Hero(Thing):
             'heal': actions.heal,
             'fireball': actions.fireball,
             'stun': actions.stun,
+        }
+        self.possible_actions_cooldowns = {
+            'attack': 0,
+            'move': 0,
+            'heal': settings.HEAL_COOLDOWN,
+            'fireball': settings.FIREBALL_COOLDOWN,
+            'stun': settings.STUN_COOLDOWN,
         }
         self.respawn_at = 0
 
