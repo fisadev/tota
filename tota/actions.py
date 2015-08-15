@@ -1,6 +1,6 @@
 import random
 
-from tota.utils import distance
+from tota.utils import distance, inside_map
 from tota import settings
 
 
@@ -73,6 +73,8 @@ def move(thing, world, target_position):
     obstacle = world.things.get(target_position)
     if obstacle is not None:
         event = 'hit {} with his head'.format(obstacle.name)
+    elif not inside_map(target_position, world.size):
+        event = "want's to get out of the world"
     else:
         # we store position in the things, because they need to know it,
         # but also in our dict, for faster access
