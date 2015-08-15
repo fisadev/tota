@@ -52,7 +52,6 @@ It should be a simple function which receives 3 parameters:
 * ``things``: a dictionary of all the things in the world, with the positions as keys.
 * ``t``: the current time
 
-
 This function will be called each game instant, so your hero can think and 
 decide what to do next. 
 
@@ -62,6 +61,20 @@ The result of the function must be a tuple. This tuple has two parts:
 * A position tuple: the position to which you want to perform that action.
 
 Example of a valid result: ``return "attack", (10, 2)``
+
+This is an example of a very, very basic hero who only throws fireballs at 
+himself:
+
+
+.. code-block:: python
+    # tota/heroes/fireballer.py
+    def create():
+
+        def fireballer_logic(self, things, t):
+            return 'fireball', self.position
+
+        return fireballer_logic
+
 
 If your hero doesn't feel like doing anything useful, it could also return just 
 None, and no action will be performed. He will just stand still, watching as 
@@ -74,3 +87,5 @@ And also, there are other useful things for your hero:
 * ``self.can('some action', t)``: check if you can perform an action at the given time.
 * ``self.last_uses``: a dictionary of the last time you used each skill with cooldown.
 * and **more**! For a nice example, look at ``tota/heroes/simple.py``.
+
+
