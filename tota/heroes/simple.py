@@ -11,6 +11,7 @@ def create():
         closest_enemy = closest(self, enemies)
         closest_enemy_distance = distance(self, closest_enemy)
 
+        # now lets decide what to do
         if self.life < self.max_life and self.can('heal', t):
             # if I'm hurt and can heal, heal
             return 'heal', self.position
