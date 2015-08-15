@@ -148,8 +148,6 @@ def heal(thing, world, target_position):
 
             event_bits.append('healed {} by {}'.format(target.name, heal))
 
-    world.effects[target_position] = 'yellow'
-
     return ', '.join(event_bits)
 
 
