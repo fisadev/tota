@@ -1,9 +1,13 @@
 import json
+from os import path
 
 from tota.game import Drawer
 
 
 class JsonReplayDrawer(Drawer):
+    def __init__(self, replay_dir):
+        self.replay_dir = replay_dir
+
     def draw(self, game):
         """Draw the world with 'ascii'-art ."""
         things_data = []
@@ -31,5 +35,8 @@ class JsonReplayDrawer(Drawer):
 
             things_data.append(thing_data)
 
-        with open('./json_replay/%08d.json' % game.world.t, 'w') as tick_file:
-            json.dump(tick_data, tick_file, indent=2 if game.debug else None)
+        tick_path = path.join(self.replay_dir, '%08d.json' % game.world.t)
+        with open(tick_path, 'w') as tick_file:
+            json.dump(tick_data,
+                      tick_file,
+                      indent=2 if game.debug else None)

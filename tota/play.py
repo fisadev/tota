@@ -3,7 +3,7 @@
 
 Usage:
     ./play.py --help
-    ./play.py RADIANT_HEROES DIRE_HEROES [-m MAP] [-s SIZE] [-d] [-b] [-f MAX_FRAMES] [-c] [-D DRAWERS]
+    ./play.py RADIANT_HEROES DIRE_HEROES [-m MAP] [-s SIZE] [-d] [-b] [-f MAX_FRAMES] [-c] [-r REPLAY_DIR] [-q]
 
     DIRE_HEROES and RADIANT_HEROES must be comma separated lists
 
@@ -19,12 +19,15 @@ Options:
                          normal icons.
     -c                   Use a compressed view if the default one is too wide
                          for your terminal.
-    -D DRAWERS           A list of the drawers used to display the game.
+    -r REPLAY_DIR        Save a json replay, which consists in *lots* of files
+                         (1 per tick) inside the specified dir.
+    -q                   Don't draw the map in the terminal.
 """
 from docopt import docopt
 
 from tota.game import Game
 from tota.drawers.terminal import TerminalDrawer
+from tota.drawers.json_replay import JsonReplayDrawer
 
 DEFAULT_MAP_SIZE = (87, 33)
 DEFAULT_MAP_PATH = './map.txt'
@@ -44,11 +47,14 @@ def play():
     radiant_heroes = arguments['RADIANT_HEROES'].split(',')
     dire_heroes = arguments['DIRE_HEROES'].split(',')
 
-    if arguments['-D']:
-        drawers = arguments['-D'].split(',')
-    else:
-        drawers = [TerminalDrawer(use_basic_icons=use_basic_icons,
-                                  use_compressed_view=use_compressed_view)]
+    drawers = []
+    if not arguments['-q']:
+        drawers.append(TerminalDrawer(use_basic_icons=use_basic_icons,
+                                      use_compressed_view=use_compressed_view))
+
+    if arguments['-r']:
+        replay_dir = arguments['-r']
+        drawers.append(JsonReplayDrawer(replay_dir=replay_dir))
 
     size = arguments['-s']
     if size:
