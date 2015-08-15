@@ -47,10 +47,6 @@ def check_target_position(f):
     return action_with_target_check
 
 
-def update_last_use(thing, world, action):
-    thing.last_uses[action] = world.t
-
-
 def calculate_damage(thing, base_damage, level_multiplier=None):
     damage = random.randint(*base_damage)
 
@@ -152,7 +148,7 @@ def heal(thing, world, target_position):
 
             event_bits.append('healed {} by {}'.format(target.name, heal))
 
-    update_last_use(thing, world, 'heal')
+    world.effects[target_position] = 'yellow'
 
     return ', '.join(event_bits)
 
@@ -173,8 +169,6 @@ def fireball(thing, world, target_position):
             event_bits.append('damaged {} with fire by {}'.format(target.name,
                                                                   damage))
 
-    update_last_use(thing, world, 'fireball')
-
     return ', '.join(event_bits)
 
 
@@ -188,7 +182,5 @@ def stun(thing, world, target_position):
     else:
         target.disabled_until = world.t + settings.STUN_DURATION
         event = 'stuned {}'.format(target.name)
-
-    update_last_use(thing, world, 'stun')
 
     return event

@@ -83,6 +83,7 @@ class World:
             try:
                 action_function = thing.possible_actions[action]
                 event = action_function(thing, self, target_position)
+                thing.last_uses[action] = self.t
                 self.event(thing, event)
             except Exception as err:
                 message = 'error executing {} action: {}'
