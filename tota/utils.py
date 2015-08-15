@@ -1,5 +1,6 @@
 from random import shuffle
 import math
+from random import random
 
 
 def to_position(something):
@@ -15,13 +16,11 @@ def distance(a, b):
     x1, y1 = to_position(a)
     x2, y2 = to_position(b)
 
-    dx = abs(x1 - x2)
-    dy = abs(y1 - y2)
-    return math.sqrt((dx ** 2) + (dy ** 2))
+    return abs(x1 - x2) + abs(y1 - y2)
 
 
 def sort_by_distance(something, others):
-    by_distance = lambda other: distance(something, other)
+    by_distance = lambda other: (distance(something, other), random())
     return sorted(others, key=by_distance)
 
 
