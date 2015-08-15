@@ -113,6 +113,8 @@ def tower_attack(thing, world, target_position):
         target.life -= damage
         event = 'damaged {} by {}'.format(target.name, damage)
 
+    world.effects[target_position] = 'yellow'
+
     return event
 
 
