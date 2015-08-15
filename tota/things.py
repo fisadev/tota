@@ -124,7 +124,7 @@ class Hero(Thing):
                          position=position)
 
         self.act_function = act_function
-
+        self.xp = 0
         self.possible_actions = {
             'move': actions.move,
             'attack': actions.hero_attack,
@@ -132,6 +132,10 @@ class Hero(Thing):
             'fireball': actions.fireball,
             'stun': actions.stun,
         }
+
+    @property
+    def level(self):
+        return int(self.xp / settings.XP_TO_LEVEL)
 
     def act(self, things, t):
         return self.act_function(self, things, t)

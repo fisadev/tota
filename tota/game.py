@@ -4,8 +4,8 @@ import time
 from termcolor import colored
 
 from tota.world import World
-from tota.things import Ancient, Hero, Creep
-from tota.utils import closes_empty_position
+from tota.things import Ancient, Hero, Creep, Tower
+from tota.utils import closes_empty_position, distance
 from tota import settings
 
 
@@ -110,7 +110,7 @@ class Game:
                         self.spawn_near_ancient(creep)
 
             self.world.step()
-
+            self.update_experience()
             self.clean_deads()
 
             # maintain the flow of zombies if necessary
@@ -127,6 +127,20 @@ class Game:
                 print(description)
 
                 return description
+
+    def update_experience(self):
+        for thing in list(self.world.things.values()):
+            if thing.life <= 0:
+                for hero in self.heroes:
+                    if distance(hero, thing) < settings.XP_DISTANCE:
+                        if isinstance(thing, Creep):
+                            hero.xp += settings.XP_CREEP_DEAD
+                        elif isinstance(thing, Hero):
+                            hero.xp += settings.XP_HERO_DEAD
+                        elif isinstance(thing, Tower):
+                            hero.xp += settings.XP_TOWER_DEAD
+
+                self.world.destroy(thing)
 
     def clean_deads(self):
         """Remove dead things from the world."""
@@ -157,9 +171,11 @@ class Game:
             else:
                 life_bar = '\u2620 [dead]'
 
-            hero_stats = '{bar}({life}) {name}'.format(bar=life_bar,
-                                                       name=hero.name,
-                                                       life=hero.life)
+            hero_template =  '{bar}({life}) {name} ({level})'
+            hero_stats = hero_template.format(bar=life_bar,
+                                              name=hero.name,
+                                              life=hero.life,
+                                              level=hero.level)
 
             screen += '\n' + colored(hero_stats,
                                      settings.TEAM_COLORS[hero.team])
