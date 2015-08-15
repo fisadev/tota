@@ -16,7 +16,7 @@ class Thing:
 
         self.name = name
         self.life = life
-        self.max_life = life
+        self._max_life = life
         self.team = team
         self.position = position
         self.acts = acts
@@ -25,6 +25,14 @@ class Thing:
     @property
     def alive(self):
         return self.life > 0
+
+    @property
+    def max_life(self):
+        return self._max_life
+
+    @max_life.setter
+    def max_life(self, value):
+        self._max_life = value
 
     def act(self, things, t):
         return None
@@ -122,7 +130,7 @@ class Hero(Thing):
 
     def __init__(self, name, team, act_function, position=None):
         super().__init__(name=name,
-                         life=settings.HERO_LIFE,
+                         life=0,
                          team=team,
                          acts=True,
                          position=position)
@@ -141,6 +149,13 @@ class Hero(Thing):
     @property
     def level(self):
         return int(self.xp / settings.XP_TO_LEVEL)
+
+    @property
+    def max_life(self):
+        health = settings.HERO_LIFE
+        health_multiplier = 1 + (self.level * settings.HERO_HEALTH_LEVEL_MULTIPLIER)
+
+        return health * health_multiplier
 
     def act(self, things, t):
         return self.act_function(self, things, t)
