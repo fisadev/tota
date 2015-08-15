@@ -21,8 +21,8 @@ def create():
                 if closest_enemy_distance < settings.STUN_DISTANCE and self.can('stun', t):
                     # try to stun him
                     return 'stun', closest_enemy.position
-                elif closest_enemy_distance < settings.FIREBALL_DISTANCE and self.can('fireball', t):
-                    # else try to fireball him
+                elif closest_enemy_distance < settings.FIREBALL_DISTANCE and self.can('fireball', t) and closest_enemy_distance > settings.FIREBALL_RADIUS:
+                    # else try to fireball him, but only if I'm not in range
                     return 'firebal', closest_enemy.position
                 elif closest_enemy_distance < settings.HERO_ATTACK_DISTANCE:
                     # else try to attack him
