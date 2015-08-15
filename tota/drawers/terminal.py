@@ -69,7 +69,7 @@ class TerminalDrawer(Drawer):
                     skull = '\u2620 '
                 life_bar = skull + '[dead]'
 
-            hero_template = '{bar}({life}) {name} ({level})'
+            hero_template = '{bar}({life}) {name} ({level})                     '
             hero_stats = hero_template.format(bar=life_bar,
                                               name=hero.name,
                                               life=int(hero.life),
@@ -87,3 +87,4 @@ class TerminalDrawer(Drawer):
                                   if t == game.world.t])
         GO_TO_TOP = '\033[0;0H'
         print(GO_TO_TOP + screen)
+
