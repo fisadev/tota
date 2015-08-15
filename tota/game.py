@@ -184,9 +184,17 @@ class Game:
                 life_chars_count = int((10.0 / hero.max_life) * hero.life)
                 life_chars = life_chars_count * '\u2588'
                 no_life_chars = (10 - life_chars_count) * '\u2591'
-                life_bar = '\u2665 {}{}'.format(life_chars, no_life_chars)
+                if self.use_basic_icons:
+                    heart = ''
+                else:
+                    heart = '\u2665 '
+                life_bar = heart + '{}{}'.format(life_chars, no_life_chars)
             else:
-                life_bar = '\u2620 [dead]'
+                if self.use_basic_icons:
+                    skull = ''
+                else:
+                    skull = '\u2620 '
+                life_bar = skull + '[dead]'
 
             hero_template = '{bar}({life}) {name} ({level})'
             hero_stats = hero_template.format(bar=life_bar,
