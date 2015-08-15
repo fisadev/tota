@@ -131,7 +131,7 @@ class Game:
         screen = ''
 
         # print the world
-        screen += '\n'.join(u''.join(self.position_draw((x, y))
+        screen += '\n'.join(u''.join(self.position_draw((x, y)) + ' '
                                      for x in range(self.world.size[0]))
                             for y in range(self.world.size[1]))
 
