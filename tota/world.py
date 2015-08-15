@@ -32,6 +32,7 @@ class World:
         """Remove something from the world."""
         del self.things[thing.position]
         thing.position = None
+        self.event(thing, 'died')
 
     def event(self, thing, message):
         """Log an event."""
@@ -43,7 +44,6 @@ class World:
         actions = self.get_actions()
         random.shuffle(actions)
         self.perform_actions(actions)
-        self.clean_deads()
 
     def get_actions(self):
         """For each thing, call its act method to get its desired action."""
@@ -89,13 +89,6 @@ class World:
                 self.event(thing, message.format(action, str(err)))
                 if self.debug:
                     raise
-
-    def clean_deads(self):
-        """Remove dead things from the world."""
-        for thing in list(self.things.values()):
-            if thing.life <= 0:
-                self.destroy(thing)
-                self.event(thing, 'died')
 
     def import_map(self, map_text):
         """Import data from a map text."""

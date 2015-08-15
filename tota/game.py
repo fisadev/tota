@@ -111,6 +111,8 @@ class Game:
 
             self.world.step()
 
+            self.clean_deads()
+
             # maintain the flow of zombies if necessary
             self.draw()
 
@@ -125,6 +127,12 @@ class Game:
                 print(description)
 
                 return description
+
+    def clean_deads(self):
+        """Remove dead things from the world."""
+        for thing in list(self.world.things.values()):
+            if thing.life <= 0:
+                self.world.destroy(thing)
 
     def draw(self):
         """Draw the world."""
