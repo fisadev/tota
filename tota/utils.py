@@ -95,3 +95,12 @@ def closes_empty_position(something, world):
                     fringe.append(adjacent)
 
     return None
+
+
+def circle_positions(center, radius):
+    """Get the positions of a circle."""
+    x_center, y_center = center
+    return [(x, y)
+            for x in range(x_center - radius, x_center + radius)
+            for y in range(y_center - radius, y_center + radius)
+            if distance((x, y), center) <= radius]
