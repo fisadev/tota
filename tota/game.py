@@ -1,7 +1,4 @@
-import os
 import time
-
-from termcolor import colored
 
 from tota.world import World
 from tota.things import Ancient, Hero, Creep, Tower
@@ -16,6 +13,11 @@ def get_hero_function(name):
     return create_function()
 
 
+class Drawer:
+    def draw(self, game):
+        pass
+
+
 class Game:
     """An instance of game controls the flow of the game.
 
@@ -23,14 +25,12 @@ class Game:
        to stop, importing map data, drawing each update, etc.
     """
     def __init__(self, radiant_heroes, dire_heroes, map_file_path, world_size,
-                 debug=False, use_basic_icons=False,
-                 use_compressed_view=False):
+                 debug=False, drawers=None):
         self.radiant_heroes = radiant_heroes
         self.dire_heroes = dire_heroes
         self.map_file_path = map_file_path
         self.debug = debug
-        self.use_basic_icons = use_basic_icons
-        self.use_compressed_view = use_compressed_view
+        self.drawers = drawers or []
 
         self.heroes = []
         self.ancients = {}
@@ -85,35 +85,6 @@ class Game:
         else:
             message = "Can't spawn {} near its ancient".format(thing.name)
             raise Exception(message)
-
-    def position_draw(self, position):
-        """Get the string to draw for a given position of the world."""
-        # decorations first, then things over them
-        thing = self.world.things.get(position)
-        effect = self.world.effects.get(position)
-
-        if thing is not None:
-            if self.use_basic_icons:
-                icon = thing.ICON_BASIC
-            else:
-                icon = thing.ICON
-
-            color = settings.TEAM_COLORS[thing.team]
-        else:
-            icon = ' '
-            color = None
-
-        if effect is not None:
-            on_color = 'on_' + effect
-        else:
-            on_color = None
-
-        if self.use_compressed_view:
-            widener = ''
-        else:
-            widener = ' '
-
-        return colored(icon + widener, color, on_color)
 
     def play(self, frames_per_second=2.0):
         """Game main loop, ending in a game result with description."""
@@ -173,54 +144,9 @@ class Game:
                     thing.respawn_at = self.world.t + settings.HERO_RESPAWN_COOLDOWN
 
     def draw(self):
-        """Draw the world."""
-        screen = ''
-
-        # print the world
-        screen += '\n'.join(u''.join(self.position_draw((x, y))
-                                     for x in range(self.world.size[0]))
-                            for y in range(self.world.size[1]))
-
-        # game stats
-        screen += '\nticks:{}'.format(self.world.t)
-
-        # print hero stats
-        for hero in sorted(self.heroes, key=lambda x: x.name):
-            if hero.alive:
-                # a small "health bar" with unicode chars, from 0 to 10 chars
-                life_chars_count = int((10.0 / hero.max_life) * hero.life)
-                life_chars = life_chars_count * '\u2588'
-                no_life_chars = (10 - life_chars_count) * '\u2591'
-                if self.use_basic_icons:
-                    heart = ''
-                else:
-                    heart = '\u2665 '
-                life_bar = heart + '{}{}'.format(life_chars, no_life_chars)
-            else:
-                if self.use_basic_icons:
-                    skull = ''
-                else:
-                    skull = '\u2620 '
-                life_bar = skull + '[dead]'
-
-            hero_template = '{bar}({life}) {name} ({level})'
-            hero_stats = hero_template.format(bar=life_bar,
-                                              name=hero.name,
-                                              life=int(hero.life),
-                                              level=hero.level)
-
-            screen += '\n' + colored(hero_stats,
-                                     settings.TEAM_COLORS[hero.team])
-
-        # print events (of last step) for debugging
-        if self.debug:
-            screen += u'\n'
-            screen += u'\n'.join([colored('{}: {}'.format(thing.name, event),
-                                          settings.TEAM_COLORS[thing.team])
-                                  for t, thing, event in self.world.events
-                                  if t == self.world.t])
-        os.system('clear')
-        print(screen)
+        """Call each drawer instance."""
+        for drawer in self.drawers:
+            drawer.draw(self)
 
     def destroyed_ancients(self):
         """Which ancients have been destroyed?"""

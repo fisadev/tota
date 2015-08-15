@@ -3,7 +3,7 @@
 
 Usage:
     ./play.py --help
-    ./play.py RADIANT_HEROES DIRE_HEROES [-m MAP] [-s SIZE] [-d] [-b] [-f MAX_FRAMES] [-c]
+    ./play.py RADIANT_HEROES DIRE_HEROES [-m MAP] [-s SIZE] [-d] [-b] [-f MAX_FRAMES] [-c] [-D DRAWERS]
 
     DIRE_HEROES and RADIANT_HEROES must be comma separated lists
 
@@ -19,10 +19,12 @@ Options:
                          normal icons.
     -c                   Use a compressed view if the default one is too wide
                          for your terminal.
+    -D DRAWERS           A list of the drawers used to display the game.
 """
 from docopt import docopt
 
 from tota.game import Game
+from tota.drawers.terminal import TerminalDrawer
 
 DEFAULT_MAP_SIZE = (87, 33)
 DEFAULT_MAP_PATH = './map.txt'
@@ -42,6 +44,12 @@ def play():
     radiant_heroes = arguments['RADIANT_HEROES'].split(',')
     dire_heroes = arguments['DIRE_HEROES'].split(',')
 
+    if arguments['-D']:
+        drawers = arguments['-D'].split(',')
+    else:
+        drawers = [TerminalDrawer(use_basic_icons=use_basic_icons,
+                                  use_compressed_view=use_compressed_view)]
+
     size = arguments['-s']
     if size:
         size = tuple(map(int, size.split('x')))
@@ -56,8 +64,7 @@ def play():
              map_file_path=map_path,
              world_size=size,
              debug=debug,
-             use_basic_icons=use_basic_icons,
-             use_compressed_view=use_compressed_view)
+             drawers=drawers)
     g.play(max_frames)
 
 
