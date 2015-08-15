@@ -27,6 +27,9 @@ class Thing:
         self.possible_actions = {}
         self.possible_actions_cooldowns = {}
 
+        self.last_action = None
+        self.last_target = None
+
     @property
     def alive(self):
         return self.life > 0
@@ -38,6 +41,18 @@ class Thing:
     @max_life.setter
     def max_life(self, value):
         self._max_life = value
+
+    def get_action(self, things, t):
+        result = self.act(things, t)
+        if result is None:
+            self.last_action = None
+            self.last_target = None
+        else:
+            action, target_position = result
+            self.last_action = action
+            self.last_target = target_position
+
+        return result
 
     def act(self, things, t):
         return None

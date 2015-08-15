@@ -57,7 +57,7 @@ class World:
                 self.event(thing, message)
             else:
                 try:
-                    act_result = thing.act(self.things, self.t)
+                    act_result = thing.get_action(self.things, self.t)
                     if act_result is None:
                         message = 'is idle'
                     else:
