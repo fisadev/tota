@@ -171,10 +171,10 @@ class Game:
             else:
                 life_bar = '\u2620 [dead]'
 
-            hero_template =  '{bar}({life}) {name} ({level})'
+            hero_template = '{bar}({life}) {name} ({level})'
             hero_stats = hero_template.format(bar=life_bar,
                                               name=hero.name,
-                                              life=hero.life,
+                                              life=int(hero.life),
                                               level=hero.level)
 
             screen += '\n' + colored(hero_stats,
