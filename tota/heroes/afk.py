@@ -1,6 +1,6 @@
 def create():
 
-    def dumb_hero_logic(things, t):
+    def afk_hero_logic(self, things, t):
         return None
 
-    return dumb_hero_logic
+    return afk_hero_logic
