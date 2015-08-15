@@ -152,7 +152,7 @@ def heal(thing, world, target_position):
                                     settings.HEAL_BASE_HEALING,
                                     settings.HEAL_LEVEL_MULTIPLIER)
 
-            target.life = min(target.MAX_LIFE, target.life + heal)
+            target.life = min(target.max_life, target.life + heal)
 
             event_bits.append('healed {} by {}'.format(target.name, heal))
 
