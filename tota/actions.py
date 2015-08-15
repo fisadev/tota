@@ -113,7 +113,7 @@ def tower_attack(thing, world, target_position):
         target.life -= damage
         event = 'damaged {} by {}'.format(target.name, damage)
 
-    world.effects[target_position] = 'yellow'
+    world.effects[target_position] = 'tower_attack'
 
     return event
 
@@ -155,7 +155,7 @@ def heal(thing, world, target_position):
 
             event_bits.append('healed {} by {}'.format(target.name, heal))
 
-        world.effects[position] = 'white'
+        world.effects[position] = 'heal'
 
     return ', '.join(event_bits)
 
@@ -180,7 +180,7 @@ def fireball(thing, world, target_position):
             event_bits.append('damaged {} with fire by {}'.format(target.name,
                                                                   damage))
 
-        world.effects[position] = 'yellow'
+        world.effects[position] = 'fireball'
 
     return ', '.join(event_bits)
 
@@ -196,6 +196,6 @@ def stun(thing, world, target_position):
         target.disabled_until = world.t + settings.STUN_DURATION
         event = 'stuned {}'.format(target.name)
 
-    world.effects[target_position] = 'magenta'
+    world.effects[target_position] = 'stun'
 
     return event

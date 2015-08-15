@@ -14,6 +14,7 @@ class JsonReplayDrawer(Drawer):
         tick_data = {
             't': game.world.t,
             'things': things_data,
+            'effects': game.world.effects,
         }
 
         for thing in game.world.things.values():

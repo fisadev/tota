@@ -62,3 +62,10 @@ ENEMY_TEAMS = {
     TEAM_DIRE: TEAM_RADIANT,
     TEAM_NEUTRAL: None,
 }
+
+EFFECT_COLORS = {
+    'tower_attack': 'yellow',
+    'fireball': 'yellow',
+    'heal': 'cyan',
+    'stun': 'magenta',
+}

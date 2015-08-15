@@ -16,6 +16,7 @@ class TerminalDrawer(Drawer):
         # decorations first, then things over them
         thing = game.world.things.get(position)
         effect = game.world.effects.get(position)
+        effect_color = settings.EFFECT_COLORS.get(effect)
 
         if thing is not None:
             if self.use_basic_icons:
@@ -28,8 +29,8 @@ class TerminalDrawer(Drawer):
             icon = ' '
             color = None
 
-        if effect is not None:
-            on_color = 'on_' + effect
+        if effect_color is not None:
+            on_color = 'on_' + effect_color
         else:
             on_color = None
 
