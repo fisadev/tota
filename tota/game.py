@@ -130,7 +130,7 @@ class Game:
 
     def update_experience(self):
         for thing in list(self.world.things.values()):
-            if thing.life <= 0:
+            if not thing.alive:
                 for hero in self.heroes:
                     if hero.team != thing.team and distance(hero, thing) < settings.XP_DISTANCE:
                         if isinstance(thing, Creep):
@@ -145,7 +145,7 @@ class Game:
     def clean_deads(self):
         """Remove dead things from the world."""
         for thing in list(self.world.things.values()):
-            if thing.life <= 0:
+            if not thing.alive:
                 self.world.destroy(thing)
 
     def draw(self):
@@ -162,7 +162,7 @@ class Game:
 
         # print hero stats
         for hero in sorted(self.heroes, key=lambda x: x.name):
-            if hero.life > 0:
+            if hero.alive:
                 # a small "health bar" with unicode chars, from 0 to 10 chars
                 life_chars_count = int((10.0 / hero.max_life) * hero.life)
                 life_chars = life_chars_count * '\u2588'
@@ -193,7 +193,7 @@ class Game:
     def destroyed_ancients(self):
         """Which ancients have been destroyed?"""
         return [ancient for ancient in self.ancients.values()
-                if ancient.life <= 0]
+                if not ancient.alive]
 
     def game_ended(self):
         """Has the game ended?"""
