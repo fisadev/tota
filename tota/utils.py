@@ -1,4 +1,4 @@
-from random import shuffle, random
+from random import shuffle, random, choice, randint
 
 
 def to_position(something):
@@ -17,10 +17,30 @@ def distance(a, b):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
+def distance_draw_solver(a, b):
+    x1, y1 = to_position(a)
+    x2, y2 = to_position(b)
+    return max([abs(x1 - x2), abs(y1 - y2)])
+
+
 def sort_by_distance(something, others):
     def by_distance(other):
-        return distance(something, other), random()
-    return sorted(others, key=by_distance)
+        return (distance(something, other),
+                distance_draw_solver(something, other))
+    sorted_others = list(sorted(others, key=by_distance))
+    if len(sorted_others) > 1 and distance(something, sorted_others[0]) == distance(something, sorted_others[1]):
+        x1, y1 = to_position(sorted_others[0])
+        x2, y2 = to_position(something)
+        delta_x = abs(x1 - x2)
+        delta_y = abs(y1 - y2)
+        max_value = max([delta_x, delta_y])
+        min_value = min([delta_x, delta_y])
+        cut_point = min_value / (max_value + min_value)
+
+        if random() < cut_point:
+            sorted_others[0], sorted_others[1] = sorted_others[1], sorted_others[0]
+
+    return sorted_others
 
 
 def closest(something, others):
