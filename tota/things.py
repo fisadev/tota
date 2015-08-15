@@ -136,6 +136,7 @@ class Hero(Thing):
             'fireball': actions.fireball,
             'stun': actions.stun,
         }
+        self.respawn_at = 0
 
     @property
     def level(self):

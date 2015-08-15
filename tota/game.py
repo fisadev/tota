@@ -71,7 +71,6 @@ class Game:
                             team=team,
                             act_function=get_hero_function(hero_name))
                 self.heroes.append(hero)
-                self.spawn_near_ancient(hero)
 
     def spawn_near_ancient(self, thing):
         """Spawn players or creeps near their ancient."""
@@ -109,6 +108,7 @@ class Game:
                         creep = Creep(team)
                         self.spawn_near_ancient(creep)
 
+            self.spawn_heroes()
             self.world.step()
             self.update_experience()
             self.clean_deads()
@@ -127,6 +127,11 @@ class Game:
                 print(description)
 
                 return description
+
+    def spawn_heroes(self):
+        for hero in self.heroes:
+            if not hero.position and hero.respawn_at == self.world.t:
+                self.spawn_near_ancient(hero)
 
     def update_experience(self):
         for thing in list(self.world.things.values()):
@@ -147,6 +152,8 @@ class Game:
         for thing in list(self.world.things.values()):
             if not thing.alive:
                 self.world.destroy(thing)
+                if isinstance(thing, Hero):
+                    thing.respawn_at = self.world.t + settings.HERO_RESPAWN_COOLDOWN
 
     def draw(self):
         """Draw the world."""
