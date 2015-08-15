@@ -22,7 +22,7 @@ from docopt import docopt
 
 from tota.game import Game
 
-DEFAULT_MAP_SIZE = (87, 33)
+DEFAULT_MAP_SIZE = (33, 33)
 DEFAULT_MAP_PATH = './map.txt'
 
 
