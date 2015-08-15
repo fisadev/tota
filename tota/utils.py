@@ -26,7 +26,9 @@ def distance_draw_solver(a, b):
 def sort_by_distance(something, others):
     def by_distance(other):
         return (distance(something, other),
-                distance_draw_solver(something, other))
+                distance_draw_solver(something, other),
+                random())
+
     sorted_others = list(sorted(others, key=by_distance))
     if len(sorted_others) > 1 and distance(something, sorted_others[0]) == distance(something, sorted_others[1]):
         x1, y1 = to_position(sorted_others[0])
