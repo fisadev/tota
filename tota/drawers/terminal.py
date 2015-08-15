@@ -1,5 +1,3 @@
-import os
-
 from tota.game import Drawer
 from tota import settings
 
@@ -87,5 +85,5 @@ class TerminalDrawer(Drawer):
                                           settings.TEAM_COLORS[thing.team])
                                   for t, thing, event in game.world.events
                                   if t == game.world.t])
-        os.system('clear')
-        print(screen)
+        GO_TO_TOP = '\033[0;0H'
+        print(GO_TO_TOP + screen)
