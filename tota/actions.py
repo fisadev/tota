@@ -4,14 +4,10 @@ from tota.utils import distance
 from tota import settings
 
 
-def check_cooldown(last_uses_key, cooldown):
+def check_cooldown(action):
     def decorator(f):
         def action_with_cooldown_check(thing, world, target_position):
-            if last_uses_key in thing.last_uses:
-                ready = world.t - thing.last_uses[last_uses_key] > cooldown
-            else:
-                ready = True
-
+            ready = thing.can(action, world.t)
             if not ready:
                 event = "tried to heal but it's on cooldown"
             else:
@@ -140,7 +136,7 @@ def creep_attack(thing, world, target_position):
 
 @check_target_position
 @check_distance(settings.HEAL_DISTANCE)
-@check_cooldown('heal', settings.HEAL_COOLDOWN)
+@check_cooldown('heal')
 def heal(thing, world, target_position):
     event_bits = []
     for position, target in world.things.items():
@@ -159,7 +155,7 @@ def heal(thing, world, target_position):
 
 @check_target_position
 @check_distance(settings.FIREBALL_DISTANCE)
-@check_cooldown('fireball', settings.FIREBALL_COOLDOWN)
+@check_cooldown('fireball')
 def fireball(thing, world, target_position):
     event_bits = []
     for position, target in world.things.items():
@@ -178,7 +174,7 @@ def fireball(thing, world, target_position):
 
 @check_target_position
 @check_distance(settings.STUN_DISTANCE)
-@check_cooldown('fireball', settings.STUN_COOLDOWN)
+@check_cooldown('stun')
 def stun(thing, world, target_position):
     target = world.things.get(target_position)
     if target is None:
