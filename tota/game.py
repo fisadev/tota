@@ -131,6 +131,7 @@ class Game:
     def spawn_heroes(self):
         for hero in self.heroes:
             if hero.respawn_at == self.world.t:
+                hero.life = hero.max_life
                 self.spawn_near_ancient(hero)
 
     def update_experience(self):
