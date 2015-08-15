@@ -22,6 +22,10 @@ class Thing:
         self.acts = acts
         self.disabled_until = 0
 
+    @property
+    def alive(self):
+        return self.life > 0
+
     def act(self, things, t):
         return None
 
