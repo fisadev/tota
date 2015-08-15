@@ -191,7 +191,7 @@ class Ancient(Thing):
 
     def __init__(self, team, position=None):
         super().__init__(name='ancient',
-                         life=settings.TOWER_LIFE,
+                         life=settings.ANCIENT_LIFE,
                          team=team,
                          acts=False,
                          position=position)
