@@ -143,7 +143,7 @@ class Ancient(Thing):
     ICON_BASIC = '@'
 
     def __init__(self, team, position=None):
-        super().__init__(name='tower',
+        super().__init__(name='ancient',
                          life=settings.TOWER_LIFE,
                          team=team,
                          acts=False,
