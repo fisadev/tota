@@ -32,6 +32,7 @@ from tota.drawers.json_replay import JsonReplayDrawer
 DEFAULT_MAP_SIZE = (87, 33)
 DEFAULT_MAP_PATH = './map.txt'
 
+import os
 
 def play():
     """Initiate a game, using the command line arguments as configuration."""
@@ -71,6 +72,7 @@ def play():
              world_size=size,
              debug=debug,
              drawers=drawers)
+    os.system('clear')
     g.play(max_frames)
 
 
