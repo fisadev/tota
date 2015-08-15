@@ -11,6 +11,7 @@ class World:
         self.size = size
         self.debug = debug
         self.things = {}
+        self.effects = {}
         self.t = 0
         self.events = []
 

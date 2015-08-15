@@ -1,6 +1,6 @@
 import random
 
-from tota.utils import distance, inside_map
+from tota.utils import distance, inside_map, circle_positions
 from tota import settings
 
 
@@ -137,8 +137,13 @@ def creep_attack(thing, world, target_position):
 @check_cooldown('heal')
 def heal(thing, world, target_position):
     event_bits = []
-    for position, target in world.things.items():
-        if distance(target_position, target) <= settings.HEAL_RADIUS:
+
+    affected_positions = circle_positions(target_position,
+                                          settings.HEAL_RADIUS)
+
+    for position in affected_positions:
+        target = world.things.get(position)
+        if target:
             # heal avoiding health overflow
             heal = calculate_damage(thing,
                                     settings.HEAL_BASE_HEALING,
@@ -148,6 +153,8 @@ def heal(thing, world, target_position):
 
             event_bits.append('healed {} by {}'.format(target.name, heal))
 
+        world.effects[position] = 'yellow'
+
     return ', '.join(event_bits)
 
 
@@ -156,8 +163,12 @@ def heal(thing, world, target_position):
 @check_cooldown('fireball')
 def fireball(thing, world, target_position):
     event_bits = []
-    for position, target in world.things.items():
-        if distance(target_position, target) <= settings.FIREBALL_RADIUS:
+    affected_positions = circle_positions(target_position,
+                                          settings.FIREBALL_RADIUS)
+
+    for position in affected_positions:
+        target = world.things.get(position)
+        if target:
             damage = calculate_damage(thing,
                                       settings.FIREBALL_BASE_DAMAGE,
                                       settings.FIREBALL_LEVEL_MULTIPLIER)
@@ -166,6 +177,8 @@ def fireball(thing, world, target_position):
 
             event_bits.append('damaged {} with fire by {}'.format(target.name,
                                                                   damage))
+
+        world.effects[position] = 'yellow'
 
     return ', '.join(event_bits)
 
