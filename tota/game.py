@@ -130,7 +130,7 @@ class Game:
 
     def spawn_heroes(self):
         for hero in self.heroes:
-            if not hero.position and hero.respawn_at == self.world.t:
+            if hero.respawn_at == self.world.t:
                 self.spawn_near_ancient(hero)
 
     def update_experience(self):
