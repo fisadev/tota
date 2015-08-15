@@ -1,6 +1,4 @@
-from random import shuffle
-import math
-from random import random
+from random import shuffle, random
 
 
 def to_position(something):
