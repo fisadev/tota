@@ -2,7 +2,7 @@ Tota
 ====
 
 Tota is a game in which you play **programming** simple bots, which will have  to
-win a game _similar_ to DotA.
+win a game *similar* to DotA.
 
 Getting started
 ===============
