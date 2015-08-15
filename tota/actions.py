@@ -156,7 +156,7 @@ def heal(thing, world, target_position):
 
             event_bits.append('healed {} by {}'.format(target.name, heal))
 
-    return event_bits.join(',')
+    return ', '.join(event_bits)
 
 
 @check_target_position
@@ -175,7 +175,7 @@ def fireball(thing, world, target_position):
             event_bits.append('damaged {} with fire by {}'.format(target.name,
                                                                   damage))
 
-    return event_bits.join(',')
+    return ', '.join(event_bits)
 
 
 @check_target_position
