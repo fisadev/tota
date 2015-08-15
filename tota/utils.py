@@ -17,7 +17,7 @@ def distance(a, b):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
-def distance_draw_solver(a, b):
+def distance_tie_breaker(a, b):
     x1, y1 = to_position(a)
     x2, y2 = to_position(b)
     return max([abs(x1 - x2), abs(y1 - y2)])
@@ -26,7 +26,7 @@ def distance_draw_solver(a, b):
 def sort_by_distance(something, others):
     def by_distance(other):
         return (distance(something, other),
-                distance_draw_solver(something, other),
+                distance_tie_breaker(something, other),
                 random())
 
     sorted_others = list(sorted(others, key=by_distance))
