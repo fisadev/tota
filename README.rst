@@ -67,6 +67,7 @@ himself:
 
 
 .. code-block:: python
+
     # tota/heroes/fireballer.py
     def create():
 
