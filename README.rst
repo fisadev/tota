@@ -26,7 +26,9 @@ And now lets just run a simple demo game:
 
 .. code-block:: bash
 
-    PYTHONPATH=. python tota/play.py simple simple -f 10
+    PYTHONPATH=. python3 tota/play.py simple simple -f 10
+
+(**Yes**, it needs **python3**)
 
 The parameters of the ``play.py`` script are very easy to understand, just run 
 it with ``--help`` (``simple`` is the name of a very simple hero already implemented
