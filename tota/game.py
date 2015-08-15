@@ -113,7 +113,6 @@ class Game:
             self.update_experience()
             self.clean_deads()
 
-            # maintain the flow of zombies if necessary
             self.draw()
 
             if self.debug:
@@ -145,8 +144,6 @@ class Game:
                             hero.xp += settings.XP_HERO_DEAD
                         elif isinstance(thing, Tower):
                             hero.xp += settings.XP_TOWER_DEAD
-
-                self.world.destroy(thing)
 
     def clean_deads(self):
         """Remove dead things from the world."""
