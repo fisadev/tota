@@ -1,6 +1,6 @@
 from tota import actions
 from tota import settings
-from tota.utils import distance, closest, sort_by_distance, adjacent_positions
+from tota.utils import distance, closest, sort_by_distance, possible_moves
 
 
 class Thing:
@@ -78,11 +78,10 @@ class Creep(Thing):
                 # enemy in aggro distance, go to it!
                 move_target = closest_enemy
 
-            adjacents = sort_by_distance(move_target,
-                                         adjacent_positions(self))
-            for adjacent in adjacents:
-                if adjacent not in things:
-                    return 'move', adjacent
+            moves = sort_by_distance(move_target,
+                                     possible_moves(self, things))
+            for move in moves:
+                return 'move', move
 
             return None
 
