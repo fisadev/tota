@@ -176,8 +176,10 @@ class Game:
         for thing, action, target_position in actions:
             try:
                 action_function = thing.possible_actions[action]
-                event = action_function(thing, self.world, target_position)
-                thing.last_uses[action] = self.world.t
+                done, event = action_function(thing, self.world, target_position)
+                if done:
+                    thing.last_uses[action] = self.world.t
+                    thing.last_action_done = done
                 self.event(thing, event)
             except Exception as err:
                 message = 'error executing {} action: {}'

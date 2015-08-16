@@ -9,11 +9,12 @@ def check_cooldown(action):
         def action_with_cooldown_check(thing, world, target_position):
             ready = thing.can(action, world.t)
             if not ready:
+                done = False
                 event = "tried to use {} but it's on cooldown".format(action)
             else:
-                event = f(thing, world, target_position)
+                done, event = f(thing, world, target_position)
 
-            return event
+            return done, event
 
         return action_with_cooldown_check
 
@@ -24,11 +25,12 @@ def check_distance(action_distance):
     def decorator(f):
         def action_with_distance_check(thing, world, target_position):
             if distance(thing, target_position) > action_distance:
+                done = False
                 event = 'too far away'
             else:
-                event = f(thing, world, target_position)
+                done, event = f(thing, world, target_position)
 
-            return event
+            return done, event
 
         return action_with_distance_check
 
@@ -38,11 +40,12 @@ def check_distance(action_distance):
 def check_target_position(f):
     def action_with_target_check(thing, world, target_position):
         if not isinstance(target_position, tuple):
+            done = False
             event = "tried to perform an action into a target that isn't a position"
         else:
-            event = f(thing, world, target_position)
+            done, event = f(thing, world, target_position)
 
-        return event
+        return done, event
 
     return action_with_target_check
 
@@ -68,8 +71,10 @@ def calculate_damage(thing, base_damage, level_multiplier=None):
 def move(thing, world, target_position):
     obstacle = world.things.get(target_position)
     if obstacle is not None:
+        done = False
         event = 'hit {} with his head'.format(obstacle.name)
     elif not inside_map(target_position, world.size):
+        done = False
         event = "want's to get out of the world"
     else:
         # we store position in the things, because they need to know it,
@@ -78,9 +83,10 @@ def move(thing, world, target_position):
         del world.things[thing.position]
         thing.position = target_position
 
+        done = True
         event = 'moved to {}'.format(target_position)
 
-    return event
+    return done, event
 
 
 @check_target_position
@@ -88,6 +94,7 @@ def move(thing, world, target_position):
 def hero_attack(thing, world, target_position):
     target = world.things.get(target_position)
     if target is None:
+        done = False
         event = 'nothing there to attack'
     else:
         damage = calculate_damage(thing,
@@ -95,9 +102,11 @@ def hero_attack(thing, world, target_position):
                                   settings.HERO_ATTACK_LEVEL_MULTIPLIER)
 
         target.life -= damage
+
+        done = True
         event = 'damaged {} by {}'.format(target.name, damage)
 
-    return event
+    return done, event
 
 
 @check_target_position
@@ -105,17 +114,20 @@ def hero_attack(thing, world, target_position):
 def tower_attack(thing, world, target_position):
     target = world.things.get(target_position)
     if target is None:
+        done = False
         event = 'nothing there to attack'
     else:
         damage = calculate_damage(thing,
                                   settings.TOWER_ATTACK_BASE_DAMAGE)
 
         target.life -= damage
+
+        done = True
         event = 'damaged {} by {}'.format(target.name, damage)
 
     world.effects[target_position] = 'tower_attack'
 
-    return event
+    return done, event
 
 
 @check_target_position
@@ -123,15 +135,18 @@ def tower_attack(thing, world, target_position):
 def creep_attack(thing, world, target_position):
     target = world.things.get(target_position)
     if target is None:
+        done = False
         event = 'nothing there to attack'
     else:
         damage = calculate_damage(thing,
                                   settings.CREEP_ATTACK_BASE_DAMAGE)
 
         target.life -= damage
+
+        done = True
         event = 'damaged {} by {}'.format(target.name, damage)
 
-    return event
+    return done, event
 
 
 @check_target_position
@@ -157,7 +172,7 @@ def heal(thing, world, target_position):
 
         world.effects[position] = 'heal'
 
-    return ', '.join(event_bits)
+    return True, ', '.join(event_bits)
 
 
 @check_target_position
@@ -182,7 +197,7 @@ def fireball(thing, world, target_position):
 
         world.effects[position] = 'fireball'
 
-    return ', '.join(event_bits)
+    return True, ', '.join(event_bits)
 
 
 @check_target_position
@@ -198,4 +213,4 @@ def stun(thing, world, target_position):
 
     world.effects[target_position] = 'stun'
 
-    return event
+    return True, event

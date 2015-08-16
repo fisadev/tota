@@ -9,6 +9,7 @@ def create():
         actions = 'move', 'attack', 'fireball', 'heal', 'stun'
         positions = adjacent_positions(self.position)
 
+        return 'stun', self.position
         return choice(actions), choice(positions)
 
     return noob_hero_logic
