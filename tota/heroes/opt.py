@@ -86,18 +86,52 @@ def multiplier(my_team, other_team):
     else:
         return 0
 
-def predict_attacks(self, things, t, action, maxrange, radius, base_damage):
+def still_damage(self, things, t, defaultpos=None):
+    # Estimate damage that I will get by standing still
+    enemy_team = settings.ENEMY_TEAMS[self.team]
+    enemies = [thing for thing in things.values()
+               if thing.team == enemy_team]
+    friends = [thing for thing in things.values()
+               if thing.team == self.team]
+    position = defaultpos or self.position
+    result = 0
+    for e in enemies:
+        if e.name == 'ancient':
+            pass
+        elif e.name == 'tower':
+            if distance(position, e.position) <= settings.TOWER_ATTACK_DISTANCE and closest(e, friends) == self:
+                result += sum(settings.TOWER_ATTACK_BASE_DAMAGE) / 2
+        elif e.name == 'creep':
+            if distance(position, e.position) <= settings.CREEP_ATTACK_DISTANCE and closest(e, friends) == self:
+                result += sum(settings.CREEP_ATTACK_BASE_DAMAGE) / 2
+        else:
+            # assume hero
+            multiplier = (1 + settings.HERO_ATTACK_LEVEL_MULTIPLIER * e.level)
+            if e.can('fireball', t) and distance(position, e.position) <= settings.FIREBALL_RADIUS+1:
+                result += sum(settings.FIREBALL_BASE_DAMAGE) / 2 * multiplier
+            elif e.can('stun', t) and distance(position, e.position) <= settings.STUN_DISTANCE:
+                result += settings.STUN_DURATION*sum(settings.HERO_ATTACK_BASE_DAMAGE) / 2 * multiplier
+            elif distance(e.position, position) <= settings.HERO_ATTACK_DISTANCE:
+                result += sum(settings.HERO_ATTACK_BASE_DAMAGE) / 2 * multiplier
+    return result
+
+def predict_attacks(self, things, t, act_name, maxrange, radius, base_damage, current):
     attackable_positions = circle_positions(self.position, maxrange)
     result = []
     DAMAGE = base_damage * (1 + settings.HERO_ATTACK_LEVEL_MULTIPLIER * self.level)
+    received = still_damage(self, current, t)
+    will_die = 0
+    if received >= self.life:
+        received = self.life
+        will_die = 1
     for center in attackable_positions:
-        action = mkaction(action, center)
+        action = mkaction(act_name, center, hero_kills=-will_die, damage=-received)
         for p in circle_positions(center, radius):
             for prob, item in things.get(p, ()):
-                m = p * multiplier(self.team, item.team)
-                damage = m * min(DAMAGE, item.life)
+                m = prob * multiplier(self.team, item.team)
+                damage = m * max(min(DAMAGE, item.life), item.life-item.max_life) # Clip for damage and heal effects
                 action['damage'] += damage
-                if HERO_DAMAGE >= item.life: # scored a kill!
+                if damage >= item.life: # scored a kill!
                     if item.name == 'ancient':
                         action['ancient_kills'] += m
                     if item.name == 'tower':
@@ -110,42 +144,35 @@ def predict_attacks(self, things, t, action, maxrange, radius, base_damage):
         result.append(action)
     return result
 
-def predict_fireballs(self, things, t):
-    attackable_positions = circle_positions(self.position, settings.FIREBALL_DISTANCE)
+def predict_moves(self, things, t):
     result = []
-    DAMAGE = sum(settings.FIREBALL_BASE_DAMAGE)/2 * (1 + settings.HERO_ATTACK_LEVEL_MULTIPLIER * self.level)
-    for p in attackable_positions:
-        action = mkaction('attack', p)
-        for p, item in things.get(p, ()):
-            m = p * multiplier(self.team, item.team)
-            damage = m * min(DAMAGE, item.life)
-            action['damage'] += damage
-            if HERO_DAMAGE >= item.life: # scored a kill!
-                if item.name == 'ancient':
-                    action['ancient_kills'] += m
-                if item.name == 'tower':
-                    action['tower_kills'] += m
-                if item.name == 'creep':
-                    action['creep_kills'] += m
-                if item.team != settings.TEAM_NEUTRAL:
-                    # Must be a hero
-                    action['hero_kills'] += m
-        result.append(action)
+    for p in possible_moves(self, things)+[self.position]:
+        received = still_damage(self, things, t, self.position)/2 + still_damage(self, things, t, p)/2
+        will_die = 0
+        if received >= self.life:
+            received = self.life
+            will_die = 1
+        result.append(mkaction('move', p, hero_kills=-will_die, damage=-received))
     return result
-
 
 def create():
     def option_logic(self, things, t):
         prediction = predict(things, t)
         actions = []
-        actions.extend(predict_attacks(self, prediction, t, 'attack', settings.HERO_ATTACK_DISTANCE, 0, sum(settings.HERO_ATTACK_BASE_DAMAGE)/2))
+        actions.extend(predict_moves(self, things, t))
+        actions.extend(predict_attacks(self, prediction, t, 'attack', settings.HERO_ATTACK_DISTANCE, 0, sum(settings.HERO_ATTACK_BASE_DAMAGE)/2, things))
         if self.can("fireball", t):
-            actions.extend(predict_attacks(self, prediction, t, 'attack', settings.FIREBALL_DISTANCE, settings.FIREBALL_RADIUS, sum(settings.FIREBALL_BASE_DAMAGE)/2))
+            actions.extend(predict_attacks(self, prediction, t, 'fireball', settings.FIREBALL_DISTANCE, settings.FIREBALL_RADIUS, sum(settings.FIREBALL_BASE_DAMAGE)/2, things))
+        if self.can("stun", t):
+            actions.extend(predict_attacks(self, prediction, t, 'stun', settings.STUN_DISTANCE, 0, settings.STUN_DURATION*sum(settings.HERO_ATTACK_BASE_DAMAGE)/2, things))
+        if self.can("heal", t):
+            # FIXME: heal should count prevented kills
+            actions.extend(predict_attacks(self, prediction, t, 'heal', settings.HEAL_DISTANCE, settings.HEAL_RADIUS, -sum(settings.HEAL_BASE_HEALING)/2, things))
         actions.sort(key=value,reverse=True)
-        action = simple_hero_logic(self, things, t)
-        if action and value(action[0]) > value(actions[0]):
-            return actions[0]['action'], actions[0]['position']
-        return action
+        best = actions[0]
+        if value(best) == (0, 0, 0, 0, 0):
+            return simple_hero_logic(self, things, t)
+        return best['action'], best['position']
 
     def simple_hero_logic(self, things, t):
         # some useful data about the enemies I can see in the map
