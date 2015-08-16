@@ -171,10 +171,10 @@ def create():
         actions.sort(key=value,reverse=True)
         best = actions[0]
         if value(best) == (0, 0, 0, 0, 0):
-            return simple_hero_logic(self, things, t)
+            return bored_tactics(self, things, t)
         return best['action'], best['position']
 
-    def simple_hero_logic(self, things, t):
+    def bored_tactics(self, things, t):
         # some useful data about the enemies I can see in the map
         enemy_team = settings.ENEMY_TEAMS[self.team]
         enemies = [thing for thing in things.values()
@@ -187,25 +187,12 @@ def create():
         closest_friend = closest(self, friends)
 
         # now lets decide what to do
-        if closest_enemy and closest_enemy_distance <= settings.STUN_DISTANCE and self.can('stun', t):
-            # try to stun him
-            return 'stun', closest_enemy.position
-        elif closest_enemy and closest_enemy_distance <= settings.FIREBALL_DISTANCE and self.can('fireball', t) and closest_enemy_distance > settings.FIREBALL_RADIUS:
-            # else try to fireball him, but only if I'm not in range
-            return 'fireball', closest_enemy.position
-        elif closest_enemy and closest_enemy_distance <= settings.HERO_ATTACK_DISTANCE:
-            # else try to attack him
-            return 'attack', closest_enemy.position
-        elif self.life < self.max_life:
-            if self.can('heal', t):
-                # if I'm hurt and can heal, heal
-                return 'heal', self.position
-            else:
-                # go to friends
-                moves = sort_by_distance(closest_friend,
-                                         possible_moves(self, things))
-                if moves:
-                    return 'move', moves[0]
+        if self.life < self.max_life:
+            # go to friends
+            moves = sort_by_distance(closest_friend,
+                                     possible_moves(self, things))
+            if moves:
+                return 'move', moves[0]
         elif closest_enemy:
             # of finally just move to him
             moves = sort_by_distance(closest_enemy,
