@@ -28,15 +28,16 @@ class JsonReplayDrawer(Drawer):
                 'position': thing.position,
             }
             if thing_data['type'] != 'Tree':
+                is_current_action = thing.last_action_t == game.world.t
                 thing_data.update({
                     'life': thing.life,
                     'name': thing.name,
                     'team': thing.team,
                     'level': getattr(thing, 'level', None),
                     'xp': getattr(thing, 'xp', None),
-                    'action': thing.last_action,
-                    'target': thing.last_target,
-                    'action_done': thing.last_action_done,
+                    'action': thing.last_action if is_current_action else None,
+                    'target': thing.last_target if is_current_action else None,
+                    'action_done': thing.last_action_done if is_current_action else None,
                 })
 
             things_data.append(thing_data)
