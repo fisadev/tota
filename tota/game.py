@@ -40,7 +40,7 @@ class Game:
         self.ancients = {}
         self.events = []
 
-        self.world = World(world_size, debug=debug)
+        self.world = World(world_size)
 
         self.initialize_world_map()
         self.cache_ancients()

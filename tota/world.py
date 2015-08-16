@@ -5,9 +5,8 @@ from tota import settings
 
 class World:
     """World where to play the game."""
-    def __init__(self, size, debug=False):
+    def __init__(self, size):
         self.size = size
-        self.debug = debug
         self.things = {}
         self.effects = {}
         self.t = 0
