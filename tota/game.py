@@ -1,3 +1,4 @@
+from collections import defaultdict
 import random
 import time
 
@@ -42,6 +43,7 @@ class Game:
         self.ancients = {}
         self.towers = {}
         self.events = []
+        self.scores = defaultdict(lambda: 0)
 
         self.world = World(world_size)
 
@@ -233,6 +235,9 @@ class Game:
                 self.event(thing, 'died')
                 if isinstance(thing, Hero):
                     thing.respawn_at = self.world.t + settings.HERO_RESPAWN_COOLDOWN
+                if isinstance(thing, (Hero, Tower)):
+                    enemy_team = settings.ENEMY_TEAMS[thing.team]
+                    self.scores[enemy_team] += 1
 
     def draw(self):
         """Call each drawer instance."""
