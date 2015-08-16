@@ -31,6 +31,7 @@ class JsonReplayDrawer(Drawer):
                 is_current_action = thing.last_action_t == game.world.t
                 thing_data.update({
                     'life': thing.life,
+                    'max_life': thing.max_life,
                     'name': thing.name,
                     'team': thing.team,
                     'level': getattr(thing, 'level', None),
