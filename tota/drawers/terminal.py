@@ -6,8 +6,8 @@ from tota import settings
 from termcolor import colored
 
 
-def health_bar(length, life, max_life):
-    """Create a small unicode health bar."""
+def make_bar(length, life, max_life):
+    """Create a small unicode bar."""
     life = max(life, 0)
     life_chars_count = int(life / (max_life / length))
     life_chars = life_chars_count * '\u2588'
@@ -75,7 +75,7 @@ class TerminalDrawer(Drawer):
             ancient_template = '{icon} {bar}({life}/{max_life}) Ancient                              '
             ancient_stats = ancient_template.format(
                 icon=ancient.ICON_BASIC if self.use_basic_icons else ancient.ICON,
-                bar=health_bar(20, ancient.life, ancient.max_life),
+                bar=make_bar(20, ancient.life, ancient.max_life),
                 life=int(ancient.life) if ancient.alive else 'destroyed!',
                 max_life=int(ancient.max_life),
             )
@@ -86,7 +86,7 @@ class TerminalDrawer(Drawer):
                 tower_template = '{icon} {bar}({life}/{max_life}) Tower                               '
                 tower_stats = tower_template.format(
                     icon=tower.ICON_BASIC if self.use_basic_icons else tower.ICON,
-                    bar=health_bar(20, tower.life, tower.max_life),
+                    bar=make_bar(20, tower.life, tower.max_life),
                     life=int(tower.life) if tower.alive else 'destroyed!',
                     max_life=int(tower.max_life),
                 )
@@ -94,14 +94,16 @@ class TerminalDrawer(Drawer):
                 screen += '\n' + colored(tower_stats, settings.TEAM_COLORS[team])
 
             for hero in sorted(heroes, key=lambda x: x.name):
-                hero_template = '{icon} {bar}({life}/{max_life}) Hero: {name} ({level})              '
+                hero_template = '{icon} {bar}({life}/{max_life}) Hero: {name}. Lvl {level} {level_bar}'
                 hero_stats = hero_template.format(
                     icon=hero.ICON_BASIC if self.use_basic_icons else hero.ICON,
-                    bar=health_bar(20, hero.life, hero.max_life),
+                    bar=make_bar(20, hero.life, hero.max_life),
                     name=hero.name,
                     life=int(hero.life) if hero.alive else 'dead',
                     max_life=int(hero.max_life),
                     level=hero.level,
+                    level_bar=make_bar(10, hero.xp % settings.XP_TO_LEVEL,
+                                       settings.XP_TO_LEVEL),
                 )
 
                 screen += '\n' + colored(hero_stats, settings.TEAM_COLORS[team])
