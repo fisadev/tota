@@ -1,7 +1,7 @@
 from tota.utils import closest, distance, sort_by_distance, possible_moves
 from tota import settings
 
-__author__ = "angvp"
+AUTHOR = 'angvp'
 
 
 def create():
@@ -14,10 +14,10 @@ def create():
         closest_enemy = closest(self, enemies)
         closest_enemy_distance = distance(self, closest_enemy)
 
-        real_life = (self.life / self.max_life) * 100
+        real_life = ((self.life / self.max_life) * 100)
 
         # now lets decide what to do
-        if int(real_life) < 85 and self.can('heal', t):
+        if int(real_life) < 70 and self.can('heal', t):
             # if I'm hurt and can heal, heal
             if closest_enemy_distance <= settings.HEAL_DISTANCE and self.can('fireball', t):
                 return 'fireball', closest_enemy.position
