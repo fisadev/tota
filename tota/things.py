@@ -87,7 +87,7 @@ class Tree(Thing):
 
 class Creep(Thing):
     """The fodder."""
-    ICON = '\u26AB'
+    ICON = '\u237E'
     ICON_BASIC = '.'
 
     def __init__(self, team, position=None):
@@ -166,7 +166,7 @@ class Tower(Thing):
 
 class Hero(Thing):
     """A player in the game, a powerfull leveling hero with special skills."""
-    ICON = '\u2689'
+    ICON = '\u046A'
     ICON_BASIC = 'o'
 
     def __init__(self, name, team, act_function, author, position=None):
