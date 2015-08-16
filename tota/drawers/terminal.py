@@ -63,7 +63,7 @@ class TerminalDrawer(Drawer):
 
         # print teams stats
         for team in (settings.TEAM_RADIANT, settings.TEAM_DIRE):
-            screen += '\n' + colored(team, settings.TEAM_COLORS[team])
+            screen += '\n' + colored(team.upper(), settings.TEAM_COLORS[team])
 
             ancient = game.ancients[team]
             team_heroes = [hero for hero in game.heroes
