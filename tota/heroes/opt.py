@@ -3,6 +3,8 @@ from tota import settings
 
 from random import choice
 
+AUTHOR = 'Darni'
+
 def predict_move(item, things, t):
     if item.name in ('tree', 'tower', 'ancient'):
         # These not move
