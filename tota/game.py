@@ -7,12 +7,13 @@ from tota.utils import closes_empty_position, distance
 from tota import settings
 
 
-def get_hero_function(name):
+def get_hero_implementation(name):
     """Get the function that has the logic for a specific hero."""
-    module = __import__('tota.heroes.' + name, fromlist=['create', ])
+    module = __import__('tota.heroes.' + name, fromlist=['create', 'AUTHOR'])
     create_function = getattr(module, 'create')
+    author = getattr(module, 'AUTHOR')
 
-    return create_function()
+    return create_function(), author
 
 
 class Drawer:
@@ -82,9 +83,11 @@ class Game:
         }
         for team, heroes in teams.items():
             for hero_name in heroes:
+                hero_function, author = get_hero_implementation(hero_name)
                 hero = Hero(name=hero_name,
                             team=team,
-                            act_function=get_hero_function(hero_name))
+                            act_function=hero_function,
+                            author=author)
                 self.heroes.append(hero)
 
     def spawn_near_ancient(self, thing):
