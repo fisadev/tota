@@ -1,12 +1,13 @@
 import time
 
 from tota.world import World
-from tota.things import Ancient, Hero, Creep, Tower
+from tota.things import Ancient, Hero, Creep, Tower, Tree
 from tota.utils import closes_empty_position, distance
 from tota import settings
 
 
 def get_hero_function(name):
+    """Get the function that has the logic for a specific hero."""
     module = __import__('tota.heroes.' + name, fromlist=['create', ])
     create_function = getattr(module, 'create')
 
@@ -14,7 +15,9 @@ def get_hero_function(name):
 
 
 class Drawer:
+    """Something that has the ability to 'draw' the game in some format."""
     def draw(self, game):
+        """Draw a tick of the game."""
         pass
 
 
@@ -42,9 +45,28 @@ class Game:
         self.initialize_heroes()
 
     def initialize_world_map(self):
+        """Read map and initialize it."""
         with open(self.map_file_path, encoding='utf-8') as map_file:
             map_text = map_file.read()
             self.world.import_map(map_text)
+
+    def import_map(self, map_text):
+        """Import data from a map text."""
+        # for each char, create the corresponding object
+        for row_index, line in enumerate(map_text.split('\n')):
+            for col_index, char in enumerate(line):
+                position = (col_index, row_index)
+
+                if char == 'T':
+                    self.world.spawn(Tree(), position)
+                elif char == 'r':
+                    self.world.spawn(Tower(settings.TEAM_RADIANT), position)
+                elif char == 'd':
+                    self.world.spawn(Tower(settings.TEAM_DIRE), position)
+                elif char == 'R':
+                    self.world.spawn(Ancient(settings.TEAM_RADIANT), position)
+                elif char == 'D':
+                    self.world.spawn(Ancient(settings.TEAM_DIRE), position)
 
     def cache_ancients(self):
         def get_ancient(team):
