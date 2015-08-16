@@ -6,7 +6,8 @@ from termcolor import colored
 
 def health_bar(length, life, max_life):
     """Create a small unicode health bar."""
-    life_chars_count = int((length / max_life) * life)
+    life = max(life, 0)
+    life_chars_count = int(life / (max_life / length))
     life_chars = life_chars_count * '\u2588'
     no_life_chars = (length - life_chars_count) * '\u2591'
 
