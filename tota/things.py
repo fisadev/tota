@@ -4,10 +4,10 @@ from tota.utils import distance, closest, sort_by_distance, possible_moves
 
 
 class Thing:
+    """Something in the world."""
     ICON = '?'
     ICON_BASIC = '?'
 
-    """Something in the world."""
     def __init__(self, name, life, team, acts, position=None):
         if team not in (settings.TEAM_DIRE,
                         settings.TEAM_RADIANT,
@@ -43,6 +43,7 @@ class Thing:
         self._max_life = value
 
     def get_action(self, things, t):
+        """Call act to get the next action, and log the results."""
         result = self.act(things, t)
         if result is None:
             self.last_action = None
@@ -55,9 +56,11 @@ class Thing:
         return result
 
     def act(self, things, t):
+        """The acting logic itself."""
         return None
 
     def can(self, action, t):
+        """Can do an action? (cooldown ready?)"""
         cooldown = self.possible_actions_cooldowns[action]
         last_use = self.last_uses.get(action, -100)
         return last_use + cooldown <= t
@@ -67,10 +70,10 @@ class Thing:
 
 
 class Tree(Thing):
+    """The ones that don't move."""
     ICON = '\u03D4'
     ICON_BASIC = 'Y'
 
-    """The ones that don't move."""
     def __init__(self, position=None):
         super().__init__(name='tree',
                          life=settings.TREE_LIFE,
@@ -80,6 +83,7 @@ class Tree(Thing):
 
 
 class Creep(Thing):
+    """The fodder."""
     ICON = '\u26AB'
     ICON_BASIC = '.'
 
@@ -128,6 +132,7 @@ class Creep(Thing):
 
 
 class Tower(Thing):
+    """Defensive building, can attack enemies."""
     ICON = '\u265C'
     ICON_BASIC = 'I'
 
@@ -157,6 +162,7 @@ class Tower(Thing):
 
 
 class Hero(Thing):
+    """A player in the game, a powerfull leveling hero with special skills."""
     ICON = '\u2689'
     ICON_BASIC = 'o'
 
@@ -197,10 +203,12 @@ class Hero(Thing):
         return health * health_multiplier
 
     def act(self, things, t):
+        """The hero act logic is defined in the hero function, call it."""
         return self.act_function(self, things, t)
 
 
 class Ancient(Thing):
+    """The team base, if it is destroyed, the team loses."""
     ICON = '\u265B'
     ICON_BASIC = '@'
 
