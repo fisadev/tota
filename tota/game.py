@@ -104,6 +104,7 @@ class Game:
         while True:
             # spawn creep wave
             if self.world.t % settings.CREEP_WAVE_COOLDOWN == 0:
+                self.event(self, 'Spawn creep waves')
                 for team in (settings.TEAM_RADIANT, settings.TEAM_DIRE):
                     for i in range(settings.CREEP_WAVE_SIZE):
                         creep = Creep(team)
@@ -193,6 +194,7 @@ class Game:
         for hero in self.heroes:
             if hero.respawn_at == self.world.t:
                 hero.life = hero.max_life
+                self.event(hero, 'spawned')
                 self.spawn_near_ancient(hero)
 
     def update_experience(self):
@@ -201,12 +203,16 @@ class Game:
             if not thing.alive:
                 for hero in self.heroes:
                     if hero.alive and hero.team != thing.team and distance(hero, thing) < settings.XP_DISTANCE:
+                        xp_gain = 0
                         if isinstance(thing, Creep):
-                            hero.xp += settings.XP_CREEP_DEAD
+                            xp_gain = settings.XP_CREEP_DEAD
                         elif isinstance(thing, Hero):
-                            hero.xp += settings.XP_HERO_DEAD
+                            xp_gain = settings.XP_HERO_DEAD
                         elif isinstance(thing, Tower):
-                            hero.xp += settings.XP_TOWER_DEAD
+                            xp_gain = settings.XP_TOWER_DEAD
+                        hero.xp += xp_gain
+
+                        self.event(hero, 'gained {} xp'.format(xp_gain))
 
     def clean_deads(self):
         """Remove dead things from the world."""

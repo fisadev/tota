@@ -82,7 +82,7 @@ class TerminalDrawer(Drawer):
         # print events (of last step) for debugging
         if game.debug:
             screen += u'\n'
-            screen += u'\n'.join([colored('{}: {}'.format(thing.name, event),
+            screen += u'\n'.join([colored('{}: {}'.format(thing, event),
                                           settings.TEAM_COLORS[thing.team])
                                   for t, thing, event in game.events
                                   if t == game.world.t])
