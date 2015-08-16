@@ -29,11 +29,12 @@ class Game:
        to stop, importing map data, drawing each update, etc.
     """
     def __init__(self, radiant_heroes, dire_heroes, map_file_path, world_size,
-                 debug=False, drawers=None):
+                 debug=False, protected=False, drawers=None):
         self.radiant_heroes = radiant_heroes
         self.dire_heroes = dire_heroes
         self.map_file_path = map_file_path
         self.debug = debug
+        self.protected = protected
         self.drawers = drawers or []
 
         self.heroes = []
@@ -164,7 +165,7 @@ class Game:
                     message = 'error with act from {}: {}'.format(thing.name,
                                                                   str(err))
                     self.event(thing, message)
-                    if self.debug:
+                    if not self.protected:
                         raise
 
         return actions
@@ -180,7 +181,7 @@ class Game:
             except Exception as err:
                 message = 'error executing {} action: {}'
                 self.event(thing, message.format(action, str(err)))
-                if self.debug:
+                if not self.protected:
                     raise
 
     def event(self, thing, message):

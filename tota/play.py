@@ -3,7 +3,7 @@
 
 Usage:
     ./play.py --help
-    ./play.py RADIANT_HEROES DIRE_HEROES [-m MAP] [-s SIZE] [-d] [-b] [-f MAX_FRAMES] [-c] [-r REPLAY_DIR] [-q]
+    ./play.py RADIANT_HEROES DIRE_HEROES [-m MAP] [-s SIZE] [-d] [-b] [-f MAX_FRAMES] [-c] [-r REPLAY_DIR] [-q] [-p]
 
     DIRE_HEROES and RADIANT_HEROES must be comma separated lists
 
@@ -22,6 +22,8 @@ Options:
     -r REPLAY_DIR        Save a json replay, which consists in *lots* of files
                          (1 per tick) inside the specified dir.
     -q                   Don't draw the map in the terminal.
+    -p                   Protect against exceptions, keep playing if a hero or
+                         fails during an act or action.
 """
 import os
 from docopt import docopt
@@ -41,6 +43,7 @@ def play():
     # start a game
     # parse arguments
     debug = arguments['-d']
+    protected = arguments['-p']
     use_basic_icons = arguments['-b']
     use_compressed_view = arguments['-c']
     max_frames = int(arguments['-f'])
@@ -71,6 +74,7 @@ def play():
              map_file_path=map_path,
              world_size=size,
              debug=debug,
+             protected=protected,
              drawers=drawers)
     os.system('clear')
     g.play(max_frames)
