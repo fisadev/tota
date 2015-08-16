@@ -17,7 +17,7 @@ def create():
         real_life = ((self.life / self.max_life) * 100)
 
         # now lets decide what to do
-        if int(real_life) < 70 and self.can('heal', t):
+        if int(real_life) < 75 and self.can('heal', t):
             # if I'm hurt and can heal, heal
             if closest_enemy_distance <= settings.HEAL_DISTANCE and self.can('fireball', t):
                 return 'fireball', closest_enemy.position
@@ -25,8 +25,10 @@ def create():
                 return 'stun', closest_enemy.position
             elif closest_enemy_distance <= settings.HEAL_DISTANCE and self.can('attack', t):
                 return 'attack', closest_enemy.position
-            else:
+            elif self.can('heal', t):
                 return 'heal', self.position
+            else:
+                return 'move', (self.position[0]-1, self.position[1]-1)
         else:
             # else, try to attack
             if closest_enemy:
@@ -55,7 +57,7 @@ def create():
 
 
         # can't do the things I want. Do nothing.
-        return None
+        return 'fireball', closest_enemy.position
 
 
     return lenovo_hero_logic
