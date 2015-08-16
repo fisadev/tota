@@ -179,7 +179,7 @@ class Game:
                 done, event = action_function(thing, self.world, target_position)
                 if done:
                     thing.last_uses[action] = self.world.t
-                    thing.last_action_done = done
+                thing.last_action_done = done
                 self.event(thing, event)
             except Exception as err:
                 message = 'error executing {} action: {}'

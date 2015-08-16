@@ -29,6 +29,7 @@ class Thing:
 
         self.last_action = None
         self.last_target = None
+        self.last_action_done = None
 
     @property
     def alive(self):
