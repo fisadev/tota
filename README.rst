@@ -41,12 +41,12 @@ To create a hero you need to create a python module inside the ``heroes`` folder
 with your hero name as module name. For example ``heroes/terminator.py``.
 
 Inside your hero module, you have to define 2 things: a hero function and a ``create`` 
-function.
+function. Also you need to define an ``AUTHOR`` variable, but that's almost no work ;)
 
-Your hero function
-------------------
+Your hero and its function
+--------------------------
 
-It should be a simple function which receives 3 parameters:
+The hero function should be a simple function which receives 3 parameters:
 
 * ``self``: your hero instance (created by the game)
 * ``things``: a dictionary of all the things in the world, with the positions as keys.
@@ -62,6 +62,11 @@ The result of the function must be a tuple. This tuple has two parts:
 
 Example of a valid result: ``return "attack", (10, 2)``
 
+The create function should be a simple function with no parameters, which 
+**returns** the hero function.
+
+Finally, ``AUTHOR`` should be a string with your name or nick.
+
 This is an example of a very, very basic hero who only throws fireballs at 
 himself:
 
@@ -69,6 +74,8 @@ himself:
 .. code-block:: python
 
     # tota/heroes/fireballer.py
+    AUTHOR = 'Me, a programmer'
+
     def create():
 
         def fireballer_logic(self, things, t):
