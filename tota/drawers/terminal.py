@@ -84,7 +84,7 @@ class TerminalDrawer(Drawer):
             screen += u'\n'
             screen += u'\n'.join([colored('{}: {}'.format(thing.name, event),
                                           settings.TEAM_COLORS[thing.team])
-                                  for t, thing, event in game.world.events
+                                  for t, thing, event in game.events
                                   if t == game.world.t])
         GO_TO_TOP = '\033[0;0H'
         print(GO_TO_TOP + screen)

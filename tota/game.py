@@ -1,3 +1,4 @@
+import random
 import time
 
 from tota.world import World
@@ -37,6 +38,7 @@ class Game:
 
         self.heroes = []
         self.ancients = {}
+        self.events = []
 
         self.world = World(world_size, debug=debug)
 
@@ -50,25 +52,10 @@ class Game:
             map_text = map_file.read()
             self.world.import_map(map_text)
 
-    def import_map(self, map_text):
-        """Import data from a map text."""
-        # for each char, create the corresponding object
-        for row_index, line in enumerate(map_text.split('\n')):
-            for col_index, char in enumerate(line):
-                position = (col_index, row_index)
-
-                if char == 'T':
-                    self.world.spawn(Tree(), position)
-                elif char == 'r':
-                    self.world.spawn(Tower(settings.TEAM_RADIANT), position)
-                elif char == 'd':
-                    self.world.spawn(Tower(settings.TEAM_DIRE), position)
-                elif char == 'R':
-                    self.world.spawn(Ancient(settings.TEAM_RADIANT), position)
-                elif char == 'D':
-                    self.world.spawn(Ancient(settings.TEAM_DIRE), position)
-
     def cache_ancients(self):
+        """
+        Find each team's ancient, and store it in a dict for faster access.
+        """
         def get_ancient(team):
             ancients = [thing for thing in self.world.things.values()
                         if isinstance(thing, Ancient) and thing.team == team]
@@ -85,6 +72,9 @@ class Game:
             self.ancients[team] = get_ancient(team)
 
     def initialize_heroes(self):
+        """
+        Instantiate each hero and add it to the list.
+        """
         teams = {
             settings.TEAM_DIRE: self.dire_heroes,
             settings.TEAM_RADIANT: self.radiant_heroes,
@@ -97,7 +87,7 @@ class Game:
                 self.heroes.append(hero)
 
     def spawn_near_ancient(self, thing):
-        """Spawn players or creeps near their ancient."""
+        """Spawn something near its ancient."""
         # start searching from the ancient position, outwards, until an empty
         # space is found, using breadth first graph search
         ancient = self.ancients[thing.team]
@@ -119,7 +109,7 @@ class Game:
                         self.spawn_near_ancient(creep)
 
             self.spawn_heroes()
-            self.world.step()
+            self.step()
             self.update_experience()
             self.clean_deads()
 
@@ -139,13 +129,73 @@ class Game:
 
                 return description
 
+    def step(self):
+        """Forward one instant of time."""
+        self.world.t += 1
+        actions = self.get_actions()
+        random.shuffle(actions)
+        self.perform_actions(actions)
+
+    def get_actions(self):
+        """For each thing, call its act method to get its desired action."""
+        actions = []
+        actors = [thing for thing in self.world.things.values()
+                  if thing.acts]
+        for thing in actors:
+            if thing.disabled_until > self.world.t:
+                message = 'disabled until {}'.format(thing.disabled_until)
+                self.event(thing, message)
+            else:
+                try:
+                    act_result = thing.get_action(self.world.things,
+                                                  self.world.t)
+                    if act_result is None:
+                        message = 'is idle'
+                    else:
+                        action, target_position = act_result
+                        if action not in thing.possible_actions:
+                            message = 'returned unknown action {}'.format(action)
+                        else:
+                            actions.append((thing, action, target_position))
+                            message = 'wants to {} into {}'.format(action,
+                                                                   target_position)
+                        self.event(thing, message)
+                except Exception as err:
+                    message = 'error with act from {}: {}'.format(thing.name,
+                                                                  str(err))
+                    self.event(thing, message)
+                    if self.debug:
+                        raise
+
+        return actions
+
+    def perform_actions(self, actions):
+        """Execute actions, and add their results as events."""
+        for thing, action, target_position in actions:
+            try:
+                action_function = thing.possible_actions[action]
+                event = action_function(thing, self.world, target_position)
+                thing.last_uses[action] = self.world.t
+                self.event(thing, event)
+            except Exception as err:
+                message = 'error executing {} action: {}'
+                self.event(thing, message.format(action, str(err)))
+                if self.debug:
+                    raise
+
+    def event(self, thing, message):
+        """Log an event."""
+        self.events.append((self.world.t, thing, message))
+
     def spawn_heroes(self):
+        """Spawn heros that need to spawn (dead or start of the game)."""
         for hero in self.heroes:
             if hero.respawn_at == self.world.t:
                 hero.life = hero.max_life
                 self.spawn_near_ancient(hero)
 
     def update_experience(self):
+        """Add the experience gained for being close to enemy deads."""
         for thing in list(self.world.things.values()):
             if not thing.alive:
                 for hero in self.heroes:
@@ -162,6 +212,7 @@ class Game:
         for thing in list(self.world.things.values()):
             if not thing.alive:
                 self.world.destroy(thing)
+                self.event(thing, 'died')
                 if isinstance(thing, Hero):
                     thing.respawn_at = self.world.t + settings.HERO_RESPAWN_COOLDOWN
 

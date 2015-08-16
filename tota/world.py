@@ -1,5 +1,3 @@
-import random
-
 from tota.things import Tree, Tower, Ancient
 from tota.utils import inside_map
 from tota import settings
@@ -13,7 +11,6 @@ class World:
         self.things = {}
         self.effects = {}
         self.t = 0
-        self.events = []
 
     def spawn(self, thing, position):
         """Add a thing to the world."""
@@ -33,64 +30,6 @@ class World:
         """Remove something from the world."""
         del self.things[thing.position]
         thing.position = None
-        self.event(thing, 'died')
-
-    def event(self, thing, message):
-        """Log an event."""
-        self.events.append((self.t, thing, message))
-
-    def step(self):
-        """Forward one instant of time."""
-        self.t += 1
-        actions = self.get_actions()
-        random.shuffle(actions)
-        self.perform_actions(actions)
-
-    def get_actions(self):
-        """For each thing, call its act method to get its desired action."""
-        actions = []
-        actors = [thing for thing in self.things.values()
-                  if thing.acts]
-        for thing in actors:
-            if thing.disabled_until > self.t:
-                message = 'disabled until {}'.format(thing.disabled_until)
-                self.event(thing, message)
-            else:
-                try:
-                    act_result = thing.get_action(self.things, self.t)
-                    if act_result is None:
-                        message = 'is idle'
-                    else:
-                        action, target_position = act_result
-                        if action not in thing.possible_actions:
-                            message = 'returned unknown action {}'.format(action)
-                        else:
-                            actions.append((thing, action, target_position))
-                            message = 'wants to {} into {}'.format(action,
-                                                                   target_position)
-                        self.event(thing, message)
-                except Exception as err:
-                    message = 'error with act from {}: {}'.format(thing.name,
-                                                                  str(err))
-                    self.event(thing, message)
-                    if self.debug:
-                        raise
-
-        return actions
-
-    def perform_actions(self, actions):
-        """Execute actions, and add their results as events."""
-        for thing, action, target_position in actions:
-            try:
-                action_function = thing.possible_actions[action]
-                event = action_function(thing, self, target_position)
-                thing.last_uses[action] = self.t
-                self.event(thing, event)
-            except Exception as err:
-                message = 'error executing {} action: {}'
-                self.event(thing, message.format(action, str(err)))
-                if self.debug:
-                    raise
 
     def import_map(self, map_text):
         """Import data from a map text."""
@@ -109,4 +48,3 @@ class World:
                     self.spawn(Ancient(settings.TEAM_RADIANT), position)
                 elif char == 'D':
                     self.spawn(Ancient(settings.TEAM_DIRE), position)
-
