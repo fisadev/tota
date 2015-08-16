@@ -23,6 +23,7 @@ Options:
                          (1 per tick) inside the specified dir.
     -q                   Don't draw the map in the terminal.
 """
+import os
 from docopt import docopt
 
 from tota.game import Game
@@ -32,7 +33,6 @@ from tota.drawers.json_replay import JsonReplayDrawer
 DEFAULT_MAP_SIZE = (87, 33)
 DEFAULT_MAP_PATH = './map.txt'
 
-import os
 
 def play():
     """Initiate a game, using the command line arguments as configuration."""
