@@ -194,6 +194,8 @@ class Hero(Thing):
         }
         self.respawn_at = 0
 
+        self.author = ''
+
     @property
     def level(self):
         return int(self.xp / settings.XP_TO_LEVEL)
