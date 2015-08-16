@@ -9,7 +9,7 @@ def check_cooldown(action):
         def action_with_cooldown_check(thing, world, target_position):
             ready = thing.can(action, world.t)
             if not ready:
-                event = "tried to heal but it's on cooldown"
+                event = "tried to use {} but it's on cooldown".format(action)
             else:
                 event = f(thing, world, target_position)
 
