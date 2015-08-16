@@ -1,6 +1,8 @@
 from tota.utils import closest, distance, sort_by_distance, possible_moves
 from tota import settings
 
+AUTHOR = 'fisa'
+
 
 def create():
     def simple_hero_logic(self, things, t):

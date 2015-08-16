@@ -2,6 +2,8 @@ from random import choice
 
 from tota.utils import adjacent_positions
 
+AUTHOR = 'fisa'
+
 
 def create():
 

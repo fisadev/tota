@@ -1,3 +1,6 @@
+AUTHOR = 'fisa'
+
+
 def create():
 
     def afk_hero_logic(self, things, t):
