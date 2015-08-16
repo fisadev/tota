@@ -71,22 +71,24 @@ class TerminalDrawer(Drawer):
             team_heroes = [hero for hero in game.heroes
                            if hero.team == team]
 
-            ancient_template = '{icon} {bar}({life}) Ancient                              '
+            ancient_template = '{icon} {bar}({life}/{max_life}) Ancient                              '
             ancient_stats = ancient_template.format(
                 icon=ancient.ICON_BASIC if self.use_basic_icons else ancient.ICON,
                 bar=health_bar(20, ancient.life, ancient.max_life),
                 life=int(ancient.life) if ancient.alive else 'destroyed!',
+                max_life=int(ancient.max_life),
             )
 
             screen += '\n' + colored(ancient_stats, settings.TEAM_COLORS[team])
 
             for hero in sorted(team_heroes, key=lambda x: x.name):
-                hero_template = '{icon} {bar}({life}) Hero: {name} ({level})              '
+                hero_template = '{icon} {bar}({life}/{max_life}) Hero: {name} ({level})              '
                 hero_stats = hero_template.format(
                     icon=hero.ICON_BASIC if self.use_basic_icons else hero.ICON,
                     bar=health_bar(20, hero.life, hero.max_life),
                     name=hero.name,
                     life=int(hero.life) if hero.alive else 'dead',
+                    max_life=int(hero.max_life),
                     level=hero.level,
                 )
 
