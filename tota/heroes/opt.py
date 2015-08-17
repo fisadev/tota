@@ -98,7 +98,10 @@ def still_damage(self, things, t, defaultpos=None):
     position = defaultpos or self.position
     result = 0
     for e in enemies:
-        if e.name == 'ancient':
+        if e.disabled_until > t or not e.alive:
+            # filter stunned stuff
+            pass
+        elif e.name == 'ancient':
             pass
         elif e.name == 'tower':
             if distance(position, e.position) <= settings.TOWER_ATTACK_DISTANCE and closest(e, friends) == self:
