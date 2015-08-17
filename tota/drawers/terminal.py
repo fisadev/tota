@@ -100,7 +100,7 @@ class TerminalDrawer(Drawer):
                 screen += '\n' + colored(tower_stats, settings.TEAM_COLORS[team])
 
             for hero in sorted(heroes, key=lambda x: x.name):
-                hero_template = '{icon} {bar}({life}/{max_life}) Hero: {name}. Lvl {level} {level_bar}'
+                hero_template = '{icon} {bar}({life}/{max_life}) Hero: {name}. Lvl {level} {level_bar} ({author})                         '
                 hero_stats = hero_template.format(
                     icon=hero.ICON_BASIC if self.use_basic_icons else hero.ICON,
                     bar=make_bar(20, hero.life, hero.max_life),
@@ -110,6 +110,7 @@ class TerminalDrawer(Drawer):
                     level=hero.level,
                     level_bar=make_bar(10, hero.xp % settings.XP_TO_LEVEL,
                                        settings.XP_TO_LEVEL),
+                    author=hero.author,
                 )
 
                 screen += '\n' + colored(hero_stats, settings.TEAM_COLORS[team])
