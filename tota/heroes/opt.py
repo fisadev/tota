@@ -181,6 +181,28 @@ def create():
 
     def bored_tactics(self, things, t):
         # some useful data about the enemies I can see in the map
+        friends = [thing for thing in things.values()
+                   if thing.team == self.team and thing != self]
+        enemy_team = settings.ENEMY_TEAMS[self.team]
+        enemy_ancient = [thing for thing in things.values()
+                   if thing.team == enemy_team and thing.name == 'ancient'][0]
+        enemy_heroes = [thing for thing in things.values()
+                   if thing.team == enemy_team and thing.name not in ('tower', 'ancient', 'creep')]
+        bravest_friend = closest(enemy_ancient, friends)
+        closest_friend = closest(self, friends)
+        
+        if self.life < self.max_life * 0.8 and enemy_heroes and self.life < enemy_heroes[0].life * 1.2:
+            # go to friends
+            moves = sort_by_distance(closest_friend,
+                                     possible_moves(self, things))
+        else:
+            moves = sort_by_distance(bravest_friend,
+                                     possible_moves(self, things))
+
+        if moves:
+            return 'move', moves[0]
+        
+        """
         enemy_team = settings.ENEMY_TEAMS[self.team]
         enemies = [thing for thing in things.values()
                    if thing.team == enemy_team]
@@ -192,6 +214,10 @@ def create():
         closest_friend = closest(self, friends)
 
         # now lets decide what to do
+        moves = sort_by_distance(closest_friend,
+                                 possible_moves(self, things))
+        if moves:
+            return 'move', moves[0]
         if self.life < self.max_life:
             # go to friends
             moves = sort_by_distance(closest_friend,
@@ -207,6 +233,6 @@ def create():
         else:
             # no enemies, do nothing
             return None
-
+        """
     #return simple_hero_logic
     return option_logic
