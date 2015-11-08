@@ -1,0 +1,26 @@
+                    ganados     perdidos    empatados   puntos
+matibarriento       6           0           0           18
+nicoechaniz         4           1           1           13
+pulenta             4           2           0           12
+darni               2           3           1           7
+gbytz               1           3           2           5
+matuu               1           3           2           5
+lenovo              0           6           0           0
+
+
+
+main bracket:
+
+matibarriento 
+darni
+                    matibarriento     nicoechaniz
+                    nicoechaniz
+nicoechaniz
+pulenta
+
+
+
+por 3ro y 4to:
+
+pulenta
+darni        pulenta

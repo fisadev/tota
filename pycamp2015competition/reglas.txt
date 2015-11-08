@@ -1,0 +1,24 @@
+Generales
+=========
+
+* Todos los partidos son simples (no hay ida y vuelta, ni mejor de N, ni nada similar, solo 1 partido). 
+* El equipo de cada heroe en cada equipo (dire o radiant) se decide por sorteo.
+* El límite de duración es 15 minutos. Luego de eso gana el heroe cuyo ancient tenga más vida. Si no se desempata por qué heroe tenga más nivel. En caso de empate también por eso, se re-ejecuta la partida.
+* Las partidas se ejecutan en máxima velocidad.
+* Se guardan replays de todas las partidas.
+
+Etapa 1
+=======
+
+* Todos contra todos
+* Partido ganado da 3 puntos
+* Partido perdido da 0 puntos
+* Empate da 1 punto a cada uno (ambos ancients destruidos en el mismo final tick)
+
+Etapa 2
+=======
+
+* Participan los 4 heroes que hayan obtenido más puntos en la etapa 1. En caso de empate, se decide por quién haya obtenido más victorias. En caso de empate, se decide por suma de niveles obtenidos en la etapa 1. Si sigue habiendo empate, se desempata con una partida siguiendo las reglas generales.
+* Se resuelve en forma de árbol desde semifinales. La posición inicial de los equipos en el árbol se hace por sorteo.
+* Las semifinales se van a mostrar en vivo el domingo a la noche.
+* La final se va a mostrar en vivo el lunes.
