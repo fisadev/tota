@@ -203,7 +203,8 @@ class Hero(Thing):
     @property
     def max_life(self):
         health = settings.HERO_LIFE
-        health_multiplier = 1 + (self.level * settings.HERO_HEALTH_LEVEL_MULTIPLIER)
+        health_multiplier = 1 + (self.level
+                                 * settings.HERO_HEALTH_LEVEL_MULTIPLIER)
 
         return health * health_multiplier
 

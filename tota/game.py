@@ -167,11 +167,15 @@ class Game:
                     else:
                         action, target_position = act_result
                         if action not in thing.possible_actions:
-                            message = 'returned unknown action {}'.format(action)
+                            message = (
+                                'returned unknown action {}'.format(action)
+                            )
                         else:
                             actions.append((thing, action, target_position))
-                            message = 'wants to {} into {}'.format(action,
-                                                                   target_position)
+                            message = (
+                                'wants to {} into {}'.format(action,
+                                                             target_position)
+                            )
                         self.event(thing, message)
                 except Exception as err:
                     message = 'error with act from {}: {}'.format(thing.name,
@@ -187,7 +191,8 @@ class Game:
         for thing, action, target_position in actions:
             try:
                 action_function = thing.possible_actions[action]
-                done, event = action_function(thing, self.world, target_position)
+                done, event = action_function(thing, self.world,
+                                              target_position)
                 if done:
                     thing.last_uses[action] = self.world.t
                 thing.last_action_done = done
@@ -215,7 +220,9 @@ class Game:
         for thing in list(self.world.things.values()):
             if not thing.alive:
                 for hero in self.heroes:
-                    if hero.alive and hero.team != thing.team and distance(hero, thing) < settings.XP_DISTANCE:
+                    if (hero.alive
+                            and hero.team != thing.team
+                            and distance(hero, thing) < settings.XP_DISTANCE):
                         xp_gain = 0
                         if isinstance(thing, Creep):
                             xp_gain = settings.XP_CREEP_DEAD
@@ -234,7 +241,8 @@ class Game:
                 self.world.destroy(thing)
                 self.event(thing, 'died')
                 if isinstance(thing, Hero):
-                    thing.respawn_at = self.world.t + settings.HERO_RESPAWN_COOLDOWN
+                    thing.respawn_at = (self.world.t
+                                        + settings.HERO_RESPAWN_COOLDOWN)
                 if isinstance(thing, (Hero, Tower)):
                     enemy_team = settings.ENEMY_TEAMS[thing.team]
                     self.scores[enemy_team] += 1

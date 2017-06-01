@@ -56,7 +56,8 @@ class JsonReplayDrawer(Drawer):
                     'xp': getattr(thing, 'xp', None),
                     'action': thing.last_action if is_current_action else None,
                     'target': thing.last_target if is_current_action else None,
-                    'action_done': thing.last_action_done if is_current_action else None,
+                    'action_done': (thing.last_action_done
+                                    if is_current_action else None),
                 })
 
             things_data.append(thing_data)

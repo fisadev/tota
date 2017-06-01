@@ -75,12 +75,13 @@ class TerminalDrawer(Drawer):
 
             ancient = game.ancients[team]
             towers = game.towers[team]
-            heroes = [hero for hero in game.heroes
-                           if hero.team == team]
+            heroes = [hero for hero in game.heroes if hero.team == team]
 
-            ancient_template = '{icon} {bar}({life}/{max_life}) Ancient                              '
+            ancient_template = ('{icon} {bar}({life}/{max_life}) '
+                                'Ancient').ljust(70)
             ancient_stats = ancient_template.format(
-                icon=ancient.ICON_BASIC if self.use_basic_icons else ancient.ICON,
+                icon=(ancient.ICON_BASIC if self.use_basic_icons
+                      else ancient.ICON),
                 bar=make_bar(20, ancient.life, ancient.max_life),
                 life=int(ancient.life) if ancient.alive else 'destroyed!',
                 max_life=int(ancient.max_life),
@@ -89,20 +90,27 @@ class TerminalDrawer(Drawer):
             screen += '\n' + colored(ancient_stats, settings.TEAM_COLORS[team])
 
             for tower in sorted(towers, key=lambda x: x.position):
-                tower_template = '{icon} {bar}({life}/{max_life}) Tower                               '
+                tower_template = ('{icon} {bar}({life}/{max_life}) '
+                                  'Tower').ljust(70)
                 tower_stats = tower_template.format(
-                    icon=tower.ICON_BASIC if self.use_basic_icons else tower.ICON,
+                    icon=(tower.ICON_BASIC if self.use_basic_icons
+                          else tower.ICON),
                     bar=make_bar(20, tower.life, tower.max_life),
                     life=int(tower.life) if tower.alive else 'destroyed!',
                     max_life=int(tower.max_life),
                 )
 
-                screen += '\n' + colored(tower_stats, settings.TEAM_COLORS[team])
+                screen += '\n' + colored(tower_stats,
+                                         settings.TEAM_COLORS[team])
 
             for hero in sorted(heroes, key=lambda x: x.name):
-                hero_template = '{icon} {bar}({life}/{max_life}) Hero: {name}. Lvl {level} {level_bar} ({author})                         '
+                hero_template = (
+                    '{icon} {bar}({life}/{max_life}) '
+                    'Hero: {name}. Lvl {level} {level_bar} ({author})'
+                ).ljust(70)
                 hero_stats = hero_template.format(
-                    icon=hero.ICON_BASIC if self.use_basic_icons else hero.ICON,
+                    icon=(hero.ICON_BASIC if self.use_basic_icons
+                          else hero.ICON),
                     bar=make_bar(20, hero.life, hero.max_life),
                     name=hero.name,
                     life=int(hero.life) if hero.alive else 'dead',
@@ -113,7 +121,8 @@ class TerminalDrawer(Drawer):
                     author=hero.author,
                 )
 
-                screen += '\n' + colored(hero_stats, settings.TEAM_COLORS[team])
+                screen += '\n' + colored(hero_stats,
+                                         settings.TEAM_COLORS[team])
 
         # print events (of last step) for debugging
         if game.debug:
@@ -128,4 +137,3 @@ class TerminalDrawer(Drawer):
 
         GO_TO_TOP = '\033[0;0H'
         print(GO_TO_TOP + screen)
-

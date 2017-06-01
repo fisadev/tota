@@ -30,7 +30,8 @@ def sort_by_distance(something, others):
                 random())
 
     sorted_others = list(sorted(others, key=by_distance))
-    if len(sorted_others) > 1 and distance(something, sorted_others[0]) == distance(something, sorted_others[1]):
+    if len(sorted_others) > 1 and (distance(something, sorted_others[0])
+                                   == distance(something, sorted_others[1])):
         x1, y1 = to_position(sorted_others[0])
         x2, y2 = to_position(something)
         delta_x = abs(x1 - x2)
@@ -40,7 +41,8 @@ def sort_by_distance(something, others):
         cut_point = min_value / (max_value + min_value)
 
         if random() < cut_point:
-            sorted_others[0], sorted_others[1] = sorted_others[1], sorted_others[0]
+            sorted_others[0], sorted_others[1] = (sorted_others[1],
+                                                  sorted_others[0])
 
     return sorted_others
 
