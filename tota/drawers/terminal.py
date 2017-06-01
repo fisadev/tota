@@ -77,8 +77,7 @@ class TerminalDrawer(Drawer):
             towers = game.towers[team]
             heroes = [hero for hero in game.heroes if hero.team == team]
 
-            ancient_template = ('{icon} {bar}({life}/{max_life}) '
-                                'Ancient').ljust(70)
+            ancient_template = '{icon} {bar}({life}/{max_life}) Ancient'
             ancient_stats = ancient_template.format(
                 icon=(ancient.ICON_BASIC if self.use_basic_icons
                       else ancient.ICON),
@@ -87,11 +86,11 @@ class TerminalDrawer(Drawer):
                 max_life=int(ancient.max_life),
             )
 
-            screen += '\n' + colored(ancient_stats, settings.TEAM_COLORS[team])
+            screen += '\n' + colored(ancient_stats.ljust(50),
+                                     settings.TEAM_COLORS[team])
 
             for tower in sorted(towers, key=lambda x: x.position):
-                tower_template = ('{icon} {bar}({life}/{max_life}) '
-                                  'Tower').ljust(70)
+                tower_template = '{icon} {bar}({life}/{max_life}) Tower'
                 tower_stats = tower_template.format(
                     icon=(tower.ICON_BASIC if self.use_basic_icons
                           else tower.ICON),
@@ -100,14 +99,12 @@ class TerminalDrawer(Drawer):
                     max_life=int(tower.max_life),
                 )
 
-                screen += '\n' + colored(tower_stats,
+                screen += '\n' + colored(tower_stats.ljust(45),
                                          settings.TEAM_COLORS[team])
 
             for hero in sorted(heroes, key=lambda x: x.name):
-                hero_template = (
-                    '{icon} {bar}({life}/{max_life}) '
-                    'Hero: {name}. Lvl {level} {level_bar} ({author})'
-                ).ljust(70)
+                hero_template = ('{icon} {bar}({life}/{max_life}) Hero: '
+                                 '{name}. Lvl {level} {level_bar} ({author})')
                 hero_stats = hero_template.format(
                     icon=(hero.ICON_BASIC if self.use_basic_icons
                           else hero.ICON),
@@ -121,7 +118,7 @@ class TerminalDrawer(Drawer):
                     author=hero.author,
                 )
 
-                screen += '\n' + colored(hero_stats,
+                screen += '\n' + colored(hero_stats.ljust(80),
                                          settings.TEAM_COLORS[team])
 
         # print events (of last step) for debugging
@@ -136,4 +133,4 @@ class TerminalDrawer(Drawer):
             system('clear')
 
         GO_TO_TOP = '\033[0;0H'
-        print(GO_TO_TOP + screen)
+        print(GO_TO_TOP + screen, end='')
