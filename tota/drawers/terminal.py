@@ -87,7 +87,7 @@ class TerminalDrawer(Drawer):
             )
 
             screen += '\n' + colored(ancient_stats,
-                                     settings.TEAM_COLORS[team]) + ' \b'
+                                     settings.TEAM_COLORS[team]) + ' \b\b'
 
             for tower in sorted(towers, key=lambda x: x.position):
                 tower_template = '{icon} {bar}({life}/{max_life}) Tower'
@@ -100,7 +100,7 @@ class TerminalDrawer(Drawer):
                 )
 
                 screen += '\n' + colored(tower_stats,
-                                         settings.TEAM_COLORS[team]) + ' \b'
+                                         settings.TEAM_COLORS[team]) + ' \b\b'
 
             for hero in sorted(heroes, key=lambda x: x.name):
                 hero_template = ('{icon} {bar}({life}/{max_life}) Hero: '
@@ -119,7 +119,7 @@ class TerminalDrawer(Drawer):
                 )
 
                 screen += '\n' + colored(hero_stats,
-                                         settings.TEAM_COLORS[team]) + ' \b'
+                                         settings.TEAM_COLORS[team]) + ' \b\b'
 
         # print events (of last step) for debugging
         if game.debug:
