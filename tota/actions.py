@@ -41,7 +41,8 @@ def check_target_position(f):
     def action_with_target_check(thing, world, target_position):
         if not isinstance(target_position, tuple):
             done = False
-            event = "tried to perform an action into a target that isn't a position"
+            event = ("tried to perform an action into a target that isn't a "
+                     "position")
         else:
             done, event = f(thing, world, target_position)
 
